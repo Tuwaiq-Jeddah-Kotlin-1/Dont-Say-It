@@ -1,29 +1,28 @@
 <resources>
-    <string name="app_name">Don\'t Say It</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name" translatable="false">Don\'t Say It</string>
     <string name="how_to_play_txt">how to play</string>
     <string name="start_in_game">Start</string>
     <string name="reset_in_game">reset</string>
-    <string name="timer">Timer</string>
+    <string name="timer" translatable="false">Timer</string>
     <string name="title_log_in">Log in</string>
     <string name="email">email</string>
     <string name="password">password</string>
-    <string name="log_in_btn">Log in</string>
-    <string name="how_to_play_btn">How to play</string>
     <string name="join_lobby_btn">Join Lobby</string>
     <string name="create_lobby_btn">Create Lobby</string>
-    <string name="game_title_don_t_nsay_it">Don\'t\nSay it</string>
+    <string name="game_title_don_t_nsay_it" translatable="false">Don\'t Say it</string>
     <string name="title_sign_up">sign up</string>
     <string name="username">username</string>
-    <string name="sign_in_btn">sign in</string>
     <string name="title_settings">Settings</string>
     <string name="sign_out_textview">Sign Out</string>
-    <string name="word_textview">word</string>
+    <string name="word_textview" translatable="false">word</string>
     <string name="contentDescription_share">share</string>
-    <string name="arabic">العربيه</string>
-    <string name="english">English</string>
+    <string name="arabic" translatable="false">العربيه</string>
+    <string name="english" translatable="false">English</string>
     <string name="dark_theme_tv">Dark Theme</string>
     <string name="contentDescription_edit_username">edit username</string>
     <string name="contentDescription_players_list">players list</string>
     <string name="contentDescription_face_blinking_animation">face blinking animation</string>
+    <string name="already_have_an_account">already have an account?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="how_to_play">how_to_play</string>
 </resources>

@@ -5,7 +5,7 @@
 
 
     <TextView
-        android:id="@+id/tvword"
+        android:id="@+id/tvWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -19,20 +19,20 @@
         android:textSize="20sp" />
 
     <ImageView
-        android:id="@+id/plpayeranimation"
+        android:id="@+id/imgPlayerAnimation"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignTop="@id/tvword"
+        android:layout_alignTop="@id/tvWord"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_face"
         android:contentDescription="@string/contentDescription_face_blinking_animation"/>
 
     <TextView
-        android:id="@+id/tvusername"
+        android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/plpayeranimation"
+        android:layout_below="@id/imgPlayerAnimation"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:hint="@string/username"

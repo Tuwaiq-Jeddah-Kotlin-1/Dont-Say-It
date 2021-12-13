@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="how_to_play_txt">كيف العب</string>
+    <string name="start_in_game">ابدأ</string>
+    <string name="reset_in_game">اعاده</string>
+    <string name="title_log_in">تسجيل الدخول</string>
+    <string name="email">الايميل</string>
+    <string name="password">الرمز السري</string>
+    <string name="join_lobby_btn">ادخل لوبي</string>
+    <string name="create_lobby_btn">سوي لوبي</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="title_settings">إعدادات</string>
+    <string name="sign_out_textview">تسجيل الخروج</string>
+    <string name="contentDescription_share">مشاركه</string>
+    <string name="contentDescription_edit_username">تغيير اسم المستخدم</string>
+    <string name="already_have_an_account">تملك حساب</string>
+    <string name="don_t_have_an_account">ليس لدي حساب</string>
+    <string name="contentDescription_players_list">اللاعبين</string>
+    <string name="dark_theme_tv">التنسيق الداكن</string>
+    <string name="title_sign_up">التسجيل</string>
+    <string name="how_to_play">كيف العب</string>
+    <string name="contentDescription_face_blinking_animation">رسوم متحركه لوجه يغمض عينيه</string>
+
+</resources>
