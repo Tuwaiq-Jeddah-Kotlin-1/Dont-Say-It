@@ -5,14 +5,21 @@ import android.widget.EditText
 import java.util.regex.Pattern
 
 
-const val PREFERENCE = "preference"
+const val PREFERENCE = "PREFERENCE"
 const val EMAIL = "EMAIL"
+const val UID = "UID"
+const val USERNAME = "USERNAME"
 const val CHANNEL_ID = "NOTIFICATION_CHANNEL_ID"
 const val NOTIFICATION_NAME = "NOTIFICATION"
+const val ROOM_NAME = "RoomName"
+const val HOST_NAME = "HOSTNAME"
+const val PLAYER_NAME = "playerName"
+const val DARKTHEME = "DARKTHEME"
+const val LANG = "LANG"
 
 private val hasUppercase = Pattern.compile("[A-Z]")
 private val hasLowercase = Pattern.compile("[a-z]")
-private val hasNumber = Pattern.compile("\\d")
+//private val hasNumber = Pattern.compile("\\d")
 
 fun EditText.checkIfEmpty(str: String): Boolean {
     return if (str.isEmpty()) {
@@ -40,7 +47,7 @@ fun EditText.validatePasswords(password: String): Boolean {
         this.requestFocus()
         return false
     }
-    if (password.length <= 8) {
+    if (password.length <6) {
         this.error = "Password is too short. Needs to have 7 characters"
         this.requestFocus()
         return false
@@ -55,11 +62,11 @@ fun EditText.validatePasswords(password: String): Boolean {
         this.requestFocus()
         return false
     }
-    if (!hasNumber.matcher(password).find()) {
+   /* if (!hasNumber.matcher(password).find()) {
         this.error = "Password needs to have at least one number"
         this.requestFocus()
         return false
-    }
+    }*/
     return true
 
 }
@@ -71,11 +78,11 @@ fun EditText.validateUsername(userName: String): Boolean {
             this.requestFocus()
             false
         }
-        userName.length > 15 -> {
+        userName.length > 10 -> {
             this.error = "Username too long"
             false
         }
-        userName.length < 6 -> {
+        userName.length < 3 -> {
             this.error = "Username too short"
             false
         }

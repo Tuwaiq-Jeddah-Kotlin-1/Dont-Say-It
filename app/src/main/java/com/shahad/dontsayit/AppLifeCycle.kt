@@ -7,10 +7,7 @@ import android.content.Context
 import android.os.Build
 
 class AppLifeCycle: Application() {
-    override fun attachBaseContext(base: Context?) {
 
-
-    }
     override fun onCreate() {//when app created
         super.onCreate()
 

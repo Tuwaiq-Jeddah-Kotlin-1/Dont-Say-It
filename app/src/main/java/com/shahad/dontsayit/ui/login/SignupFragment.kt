@@ -10,11 +10,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.shahad.dontsayit.*
-import com.shahad.dontsayit.data.ViewModel
+import com.shahad.dontsayit.data.network.ViewModel
 import java.util.*
 
 class SignupFragment : Fragment() {
@@ -38,23 +39,23 @@ class SignupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         findView(view)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
-        sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
+       /* sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
         val emailPref = sharedPreferences.getString(EMAIL, null)
-
+*/
         btnSignup.setOnClickListener {
 
             if (validate()) {
                 viewModel.signUp(
                     etEmail.text.toString().trim().lowercase(Locale.getDefault()),
                     etPassword.text.toString().trim(),
-                    etUsername.text.toString().trim()
+                    etUsername.text.toString().trim(),findNavController()
                 )
-                if (emailPref != null ) {
-                    findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
-                }
+              /*  if (emailPref != null ) {
+                Toast.makeText(view.context, emailPref, Toast.LENGTH_LONG).show()
 
+                findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+                }*/
             }
-
         }
         btnLogin.setOnClickListener {
             Log.i("Register: ", "nav to login")

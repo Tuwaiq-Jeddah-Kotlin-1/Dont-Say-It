@@ -3,17 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_baseline_face_24.xml" value="0.2203125" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_check.xml" value="0.1935185185185185" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_edit.xml" value="0.2203125" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_face.xml" value="0.1" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_settings.xml" value="0.1" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_share.xml" value="0.2203125" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/ic_users.xml" value="0.1" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/drawable/item_bg.xml" value="0.1" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/activity_game.xml" value="0.22" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/activity_signup.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/activity_splash.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/dialog.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_how_to_play.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_login.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_settings.xml" value="0.29008341056533826" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_login.xml" value="0.5" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_settings.xml" value="0.25" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/fragment_signup.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/player_list_dialog.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/vip/Desktop/DontSayIt/app/src/main/res/layout/recyclerview_item.xml" value="0.33" />
       </map>
     </option>

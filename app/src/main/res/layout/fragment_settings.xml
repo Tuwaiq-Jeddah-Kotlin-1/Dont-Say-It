@@ -35,7 +35,7 @@
             android:layout_marginStart="20dp"
             android:ems="10"
             android:hint="@string/username"
-            android:inputType="textPersonName" />
+            android:inputType="none" />
 
         <ImageButton
             android:id="@+id/btnEditUsername"
@@ -45,9 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:background="@drawable/ic_edit"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:contentDescription="@string/contentDescription_edit_username"/>
+            android:contentDescription="@string/contentDescription_edit_username" />
 
     </RelativeLayout>
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/howToPlayFragment"
@@ -14,7 +14,14 @@
         android:id="@+id/settingsFragment"
         android:name="com.shahad.dontsayit.ui.main.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.shahad.dontsayit.data.model.User" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.shahad.dontsayit.ui.login.LoginFragment"
@@ -51,15 +58,7 @@
             android:id="@+id/action_homeFragment_to_howToPlayFragment"
             app:destination="@id/howToPlayFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_gameActivity"
-            app:destination="@id/gameActivity" />
-        <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
-    <activity
-        android:id="@+id/gameActivity"
-        android:name="com.shahad.dontsayit.ui.game.GameActivity"
-        android:label="activity_game"
-        tools:layout="@layout/activity_game" />
 </navigation>
