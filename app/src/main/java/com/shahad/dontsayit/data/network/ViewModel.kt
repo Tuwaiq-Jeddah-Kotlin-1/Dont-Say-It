@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.shahad.dontsayit.data.model.User
+import com.google.firebase.database.DatabaseReference
 import com.shahad.dontsayit.data.model.Word
 import kotlinx.coroutines.launch
 
@@ -27,7 +27,7 @@ class ViewModel(context: Application) : AndroidViewModel(context) {
         return wordList
     }
 
-    fun getUserById(id: String)= repo.getUserById(id)
+    fun getUserById(id: String) = repo.getUserById(id)
 
 
     fun updateUser(username: String) {
@@ -45,7 +45,39 @@ class ViewModel(context: Application) : AndroidViewModel(context) {
     fun signIn(email: String, pass: String, findNavController: NavController) {
         viewModelScope.launch {
             repo.signIn(email, pass, findNavController)
-
         }
+    }
+
+    fun getScore(playerScoreRef: DatabaseReference): MutableLiveData<Long> {
+        val score = MutableLiveData<Long>()
+        playerScoreRef.get().addOnSuccessListener {
+            Log.i("getScore 1  :", it.value.toString())
+            score.postValue(it.value as Long)//java.lang.NullPointerException: null cannot be cast to non-null type kotlin.Long
+
+            Log.i("getScore 2  :", it.value.toString())
+        }
+        return score
+    }
+
+    fun getRound(roomRef: DatabaseReference): MutableLiveData<Long> {
+        val round = MutableLiveData<Long>()
+        roomRef.get().addOnSuccessListener {
+                  Log.i("getScore 1  :",it.value.toString())
+            round.postValue(it.value as Long)
+            //      Log.i("getScore 2  :",it.value.toString())
+        }
+        return round
+    }
+
+    fun resetState(stateRef: DatabaseReference, playersList: List<String>): MutableLiveData<Any> {
+        val newState = mutableMapOf<String, String>()
+        val stateList = MutableLiveData<Any>()
+
+        playersList.forEach { newState[it] = "in" }
+        stateRef.updateChildren(newState as Map<String, Any>)
+        stateRef.get().addOnSuccessListener {
+            stateList.postValue(it.value)
+        }
+        return stateList
     }
 }

@@ -10,15 +10,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.*
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.R
+import com.shahad.dontsayit.data.model.Player
+import com.shahad.dontsayit.data.model.PlayerData
 import com.shahad.dontsayit.data.network.ViewModel
 import com.shahad.dontsayit.ui.game.GameActivity
 
@@ -38,7 +38,10 @@ class HomeFragment : Fragment() {
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var roomRef: DatabaseReference
     private lateinit var roomsRef: DatabaseReference
+    var roomsList: MutableList<String> = mutableListOf()
     private var roomCreateJoin: Boolean = false
+    private lateinit var roomListener: ValueEventListener
+    private lateinit var roomsListener: ValueEventListener
 
 
     override fun onCreateView(
@@ -55,13 +58,10 @@ class HomeFragment : Fragment() {
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
         val uId = sharedPreferences.getString(UID, null)
         uId?.let { fillShared(it) }
-       // playerName = sharedPreferences.getString(PLAYER_NAME, "") ?: ""
-
 
         roomsRef = database.getReference("rooms")
 
         btnCreateLobby.setOnClickListener {
-            //startActivity(Intent(requireContext(), GameActivity::class.java))
             createRoomDialog()
         }
         btnJoinLobby.setOnClickListener {
@@ -79,12 +79,13 @@ class HomeFragment : Fragment() {
             intent.type = "text/plain"
             startActivity(intent)
         }
+        addRoomsEventListener()
     }
 
     private fun fillShared(uId: String) {
-        viewModel.getUserById(uId).observe(viewLifecycleOwner,{
+        viewModel.getUserById(uId).observe(viewLifecycleOwner, {
             sharedPreferences.edit().putString(USERNAME, it.username).apply()
-            playerName = sharedPreferences.getString(USERNAME,"")?:""
+            playerName = it.username
         })
     }
 
@@ -95,6 +96,39 @@ class HomeFragment : Fragment() {
         imgBtnShare = view.findViewById(R.id.imgBtnShare)
         imgBtnSettings = view.findViewById(R.id.imgBtnSettings)
 
+    }
+
+    private fun setPlayersNum(chosen: Int) {
+        //minus one player
+        roomsRef.child(roomName).child("playersNum").setValue((chosen) - 1)
+        host = playerName
+    }
+
+    private fun setHost() {
+        //add host name
+        roomRef = database.getReference("rooms/${roomName}/host")
+        roomRef.setValue(playerName)
+    }
+    private fun setRound() {
+        //add host name
+        roomRef = database.getReference("rooms/${roomName}/round")
+        roomRef.setValue(0)
+    }
+    private fun addPlayer() {
+        //add player
+        roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
+        roomRef.setValue("$playerName word?")
+
+        roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
+        roomRef.setValue("in")
+        roomRef = database.getReference("rooms/${roomName}/score/${playerName}")
+        roomRef.setValue(0)
+    }
+
+    private fun reducePlayersNum(num: DataSnapshot) {
+        //player minus one
+        roomRef = database.getReference("rooms/${roomName}/playersNum")
+        roomRef.setValue(num.value.toString().toInt() - 1)
     }
 
     private fun createRoomDialog() {
@@ -117,24 +151,52 @@ class HomeFragment : Fragment() {
             roomCreateJoin = true
 
             if (edKeyword.text.toString() != "") {
-                btnCreateLobby.text = getString(R.string.creating_room_txt)
+                btnCreateLobby.text = getString(R.string.create_lobby_btn)
                 btnCreateLobby.isEnabled = false
                 roomName = edKeyword.text.toString()
-                roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
-                roomRef.setValue("$playerName word?")
-                roomsRef.child(roomName).child("playersNum").setValue((chosen) - 1)
-                host = playerName
-                //just added
-                roomRef = database.getReference("rooms/${roomName}/host")
-                roomRef.setValue(playerName)
-                dialog.dismiss()
-                addRoomEventListener()
 
+                if (!roomsList.contains(roomName)) {
+                    addPlayer()
+                    /* //add player
+                roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
+                roomRef.setValue("$playerName word?")*/
+
+
+                    /* //add player state
+                 roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
+                 roomRef.setValue("in")
+ */
+
+                    setPlayersNum(chosen)
+                    /*//minus one player
+                roomsRef.child(roomName).child("playersNum").setValue((chosen) - 1)
+                host = playerName*/
+
+                    setHost()
+                    setRound()
+                    /*//add host name
+                roomRef = database.getReference("rooms/${roomName}/host")
+                roomRef.setValue(playerName)*/
+
+
+                    dialog.dismiss()
+                    addRoomEventListener()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "room key is taken choose another key",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    btnCreateLobby.isEnabled = true
+
+                }
             }
         }
         btnCancel.setOnClickListener {
             edKeyword.text.clear()
             chosen = 2
+            dialog.dismiss()
+
         }
 
 
@@ -151,19 +213,30 @@ class HomeFragment : Fragment() {
         var numPick: NumberPicker = dialog.findViewById(R.id.numberPicker)
         numPick.isVisible = false
         tvPlayers.isVisible = false
-        btnJoin.text = getString(R.string.join_room_btn)
+        btnJoin.text = getString(R.string.join_lobby_btn)
         btnJoin.setOnClickListener {
             roomCreateJoin = true
 
             roomName = edKeyword.text.toString()
-            //check players number before adding another player
+            btnJoinLobby.isEnabled = false
 
-            checkPlayersNum()
-            dialog.dismiss()
+            //check if room exists
+            if (roomsList.contains(roomName)) {
+                //check players number before adding another player
+
+                checkPlayersNum(dialog)
+
+            } else {
+                Toast.makeText(requireContext(), "room doesn't exists", Toast.LENGTH_LONG).show()
+                btnJoinLobby.isEnabled = true
+            }
+
 
         }
         btnCancel.setOnClickListener {
             edKeyword.text.clear()
+            dialog.dismiss()
+
 
         }
 
@@ -171,39 +244,76 @@ class HomeFragment : Fragment() {
         dialog.show()
     }
 
-    private fun checkPlayersNum() {
+    private fun checkPlayersNum(dialog: Dialog) {
         roomRef = database.getReference("rooms/${roomName}/playersNum")
 
         roomRef.get().addOnCompleteListener {
             it.addOnSuccessListener { num ->
-              //  Log.i("players number ", num.value.toString())
-               if (num.value!=null){
-                if (num.value.toString().toInt() - 1 >= 0) {//change value and let player in
-                    roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
-                    roomRef.setValue("$playerName word?")//can set this to random word from api?
-                    roomRef = database.getReference("rooms/${roomName}/playersNum")
-                    roomRef.setValue(num.value.toString().toInt() - 1)
-                    addRoomEventListener()
-                    Log.i("players number IF", "YOU'RE IN")
-                } else {
-                    Log.i("players number ELSE ROOM FULL", num.value.toString())
-                }}
+                //  Log.i("players number ", num.value.toString())
+                if (num.value != null) {
+                    if (num.value.toString().toInt() - 1 >= 0) {//change value and let player in
+
+
+                        addPlayer()
+                        /*//add player
+                        roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
+                        roomRef.setValue("$playerName word?")//can set this to random word from api?*/
+/*
+
+                    //add state
+                    roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
+                    roomRef.setValue("in")//can set this to random word from api?
+*/
+
+                        reducePlayersNum(num)
+                        /*//player minus one
+                        roomRef = database.getReference("rooms/${roomName}/playersNum")
+                        roomRef.setValue(num.value.toString().toInt() - 1)*/
+                        dialog.dismiss()
+
+                        addRoomEventListener()
+                        // Log.i("players number IF", "YOU'RE IN")
+
+                    } else {
+                        //   Log.i("players number ELSE ROOM FULL", num.value.toString())
+                        Toast.makeText(requireContext(), "this room is full", Toast.LENGTH_LONG)
+                            .show()
+                        btnJoinLobby.isEnabled = true
+
+                    }
+                }
             }
-            it.addOnFailureListener { e ->
-                Log.i("players number", e.message.toString())
-            }
+
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("onStop", "removingListeners")
+        if (this::roomRef.isInitialized) {
+            roomRef.removeEventListener(roomListener)
+            Log.i("onStop", "roomRef isInitialized")
+
+        }
+        if (this::roomsRef.isInitialized) {
+            roomsRef.removeEventListener(roomsListener)
+            Log.i("onStop", "roomsRef isInitialized")
+
         }
     }
 
     private fun addRoomEventListener() {
 
-        roomRef.addValueEventListener(object : ValueEventListener {
+        roomListener = roomRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.i("addRoomEventListener", "roomListener")
+
                 if (roomCreateJoin) {// if true then the change is  creating/joining room
 
                     //join the room
-                    btnCreateLobby.text = getString(R.string.create_room_btn)
+                    /* btnCreateLobby.text = getString(R.string.create_lobby_btn)*/
                     btnCreateLobby.isEnabled = true
+                    btnJoinLobby.isEnabled = true
 
                     val intent = Intent(requireContext(), GameActivity::class.java)
                     intent.putExtra(ROOM_NAME, roomName)
@@ -215,9 +325,42 @@ class HomeFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {
                 //error
-                btnCreateLobby.text = getString(R.string.create_room_btn)
+                /* btnCreateLobby.text = getString(R.string.create_lobby_btn)*/
                 btnCreateLobby.isEnabled = true
+                btnJoinLobby.isEnabled = true
                 Toast.makeText(requireContext(), "Error!", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+    }
+
+    private fun addRoomsEventListener() {
+        // roomsRef = database.getReference("rooms")
+        roomsListener = roomsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.i("addRoomsEventListener", "roomsListener")
+
+                //show list of rooms
+                roomsList.clear()
+                val rooms: Iterable<DataSnapshot> = snapshot.children
+                for (room in rooms) {
+                    roomsList.add(room.key!!)
+
+                    /*   val adapter: ArrayAdapter<String> = ArrayAdapter(
+                           requireContext(),
+                           android.R.layout.simple_list_item_1,
+                           roomsList
+                       )
+                       listview.adapter = adapter*/
+
+
+                }
+                //  Log.i("ROOMS data change", "$playerName: $roomDeletedFlag")
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error - nothing
             }
 
         })

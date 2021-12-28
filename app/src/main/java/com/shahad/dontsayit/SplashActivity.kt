@@ -34,7 +34,6 @@ class SplashActivity : AppCompatActivity() {
         } else {
             //setTheme(R.style.Theme_DontSayIt) //.AppTheme)
           //  Toast.makeText(this,"SplashActivity MODE_NIGHT_NO",Toast.LENGTH_SHORT).show()
-
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
 

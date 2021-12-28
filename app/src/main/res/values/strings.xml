@@ -3,7 +3,6 @@
     <string name="how_to_play_txt">how to play</string>
     <string name="start_in_game">Play</string>
     <string name="reset_in_game">reset</string>
-    <string name="timer" translatable="false">Timer</string>
     <string name="title_log_in">Log in</string>
     <string name="email">email</string>
     <string name="password">password</string>
@@ -25,23 +24,11 @@
     <string name="already_have_an_account">already have an account?</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="how_to_play">how to play</string>
+    <string name="players">players number</string>
+    <string name="lobby_keyword">Lobby keyword</string>
+    <string name="username_hint">username</string>
+    <string name="cancel">Cancel</string>
+    <string name="game_details_dialog_header">Game Details</string>
 
-
-    <string name="create_room_btn" translatable="false">Create Room</string>
-    <string name="join_room_btn" translatable="false">Join Room</string>
-    <string name="creating_room_txt" translatable="false">Creating Room</string>
-    <string name="logging_in_txt" translatable="false">Logging in</string>
-    <string name="login_btn" translatable="false">Login</string>
-    <string name="players" translatable="false">Players</string>
-    <string name="lobby_keyword" translatable="false">Lobby keyword</string>
-    <string name="cancel" translatable="false">Cancel</string>
-    <string name="create_lobby" translatable="false">Create Lobby</string>
-    <string name="username_hint" translatable="false">username</string>
-    <string name="create_room" translatable="false">Create Room</string>
-    <string name="join_room" translatable="false">Join Room</string>
-    <string name="message_hint" translatable="false">message</string>
-    <string name="message_txt" translatable="false">message</string>
-    <string name="write_a_message" translatable="false">write a message</string>
-    <string name="button" translatable="false">Button</string>
 
 </resources>

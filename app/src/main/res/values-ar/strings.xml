@@ -6,8 +6,7 @@
     <string name="title_log_in">تسجيل الدخول</string>
     <string name="email">الايميل</string>
     <string name="password">الرمز السري</string>
-    <string name="join_lobby_btn">انشاء جلسة</string>
-    <string name="create_lobby_btn">انضمام الى جلسة</string>
+    <string name="join_lobby_btn">انضمام الى جلسة</string>
     <string name="username">اسم المستخدم</string>
     <string name="title_settings">إعدادات</string>
     <string name="sign_out_textview">تسجيل الخروج</string>
@@ -18,7 +17,13 @@
     <string name="contentDescription_players_list">اللاعبين</string>
     <string name="dark_theme_tv">التنسيق الداكن</string>
     <string name="title_sign_up">التسجيل</string>
-    <string name="how_to_play">كيف العب</string>
+    <string name="how_to_play">كيفية اللعب</string>
     <string name="contentDescription_face_blinking_animation">رسوم متحركه لوجه يغمض عينيه</string>
+    <string name="create_lobby_btn">انشاء جلسة</string>
+    <string name="players">عدد اللاعبين</string>
+    <string name="lobby_keyword">رمز الغرفة</string>
+    <string name="username_hint">اسم المستخدم</string>
+    <string name="cancel">الغاء</string>
+    <string name="game_details_dialog_header">تفاصيل الجلسة</string>
 
 </resources>

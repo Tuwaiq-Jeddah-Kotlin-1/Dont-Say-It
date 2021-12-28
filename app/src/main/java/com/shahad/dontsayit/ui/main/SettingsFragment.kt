@@ -143,6 +143,7 @@ class SettingsFragment : Fragment() {
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
         startActivity(Intent(requireContext(), MainActivity::class.java))
+        activity.finish();
     }
 }
     ////////////////theme practice/////////////
