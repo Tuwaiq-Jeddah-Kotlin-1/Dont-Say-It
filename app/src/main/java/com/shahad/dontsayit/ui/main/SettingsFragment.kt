@@ -10,35 +10,46 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import coil.load
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.shahad.dontsayit.*
+import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.network.ViewModel
 import java.util.*
 
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
+    //private lateinit var recyclerview: RecyclerView//
     private lateinit var etUsername: EditText
     private lateinit var btnEditUsername: ImageButton
+    private lateinit var imgbtnprofile: ImageButton
+    private lateinit var imgprofile: ImageView
     private lateinit var tvEmail: TextView
     private lateinit var tvSignOut: TextView
-    private lateinit var engLang: TextView
-    private lateinit var arLang: TextView
-    private lateinit var switchTheme: SwitchCompat
+    private lateinit var engLang: MaterialButton
+    private lateinit var arLang: MaterialButton
+    private lateinit var toggleDark: MaterialButton
+    private lateinit var toggleLight: MaterialButton
+   // private lateinit var switchTheme: MaterialButtonToggleGroup
     private lateinit var viewModel: ViewModel
     private lateinit var sharedPreferences: SharedPreferences
     private val auth = FirebaseAuth.getInstance()
     private lateinit var username: String
+    private lateinit var pictureList: Array<ProfilePicture>//
+
+    //
+    //private lateinit var bottomSheet: ConstraintLayout
+   // private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,20 +61,72 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         findView(view)
+        //recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)//
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
+
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
         username = sharedPreferences.getString(USERNAME, "") ?: ""
+        tvEmail.text = sharedPreferences.getString(EMAIL, "")
+        //Toast.makeText(requireContext(),"loading pic",Toast.LENGTH_SHORT).show()
+        imgprofile.load(sharedPreferences.getString(PIC, ""))
 
-        if (sharedPreferences.getBoolean(DARKTHEME,false)) {//if dark theme is true flip the switch
-          //  Toast.makeText(requireContext(),"SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
-
-            switchTheme.isChecked = true
-        }
         etUsername.setText(username)
         etUsername.isEnabled = false
+       // pictureList= mutableListOf(ProfilePicture("1","https://kucasino.net/wp-content/uploads/mc-mai-ngoc.png"), ProfilePicture("2","https://we25.vn/media/images/o-anhvong3%20(4).jpg"),ProfilePicture("3","https://ttol.vietnamnetjsc.vn/images/2018/12/08/09/41/hotgirl-3.jpg"),)
+        if (sharedPreferences.getBoolean(DARK_THEME, false)) {//if dark theme is true flip the switch
+            //  Toast.makeText(requireContext(),"SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
 
+            toggleDark.isChecked = true
+        }else{
+            toggleLight.isChecked = true
 
-        tvEmail.text = sharedPreferences.getString(EMAIL, "")
+        }
+    if (sharedPreferences.getString (LANG,"en")=="en") {//if dark theme is true flip the switch
+            //  Toast.makeText(requireContext(),"SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
+
+            engLang.isChecked = true
+        }else{
+        arLang.isChecked = true
+
+    }
+        if(viewModel.checkConnection(requireContext())&& !this::pictureList.isInitialized){
+        viewModel.getProfilePictures().observe(viewLifecycleOwner,{
+            Toast.makeText(requireContext(),"observe",Toast.LENGTH_SHORT).show()
+            pictureList=it.toTypedArray()
+            Toast.makeText(requireContext(),"done observe",Toast.LENGTH_SHORT).show()
+        })}
+        //
+        /*bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+*/
+/*                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.white))
+                view.background = resources.getDrawable(R.drawable.background)
+                refreshView(view.context)
+                addButton.visibility = View.VISIBLE
+            }
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.white))
+                view.background = resources.getDrawable(R.drawable.background)
+                refreshView(view.context)
+                addButton.visibility = View.VISIBLE
+
+            }
+            if (newState == BottomSheetBehavior.STATE_EXPANDED || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                addButton.visibility = View.GONE
+            }
+        *//*
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                //  transitionBottomSheetParentView(slideOffset, view)
+            }
+        })*/
+        //
 
         btnEditUsername.setOnClickListener {
             etUsername.isEnabled = !etUsername.isEnabled
@@ -79,42 +142,69 @@ class SettingsFragment : Fragment() {
             if (etUsername.text.toString() != username) {
                 //update db with new username
                 username = etUsername.text.toString()
-                viewModel.updateUser(username)
+                viewModel.updateUsername(username)
                 sharedPreferences.edit().putString(USERNAME, username).apply()
             }
         }
         engLang.setOnClickListener {//save in preference and start app with it, get words with it
-            sharedPreferences.edit().putString(LANG,"en").apply()
+            sharedPreferences.edit().putString(LANG, "en").apply()
             setLocale(requireActivity(), "en")
         }
         arLang.setOnClickListener {
-            sharedPreferences.edit().putString(LANG,"ar").apply()
+            sharedPreferences.edit().putString(LANG, "ar").apply()
             setLocale(requireActivity(), "ar")
         }
+        toggleDark.setOnClickListener {
+            sharedPreferences.edit().putBoolean(DARK_THEME, true).apply()
+            //  Toast.makeText(requireContext(),"isChecked SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
 
-        switchTheme.setOnCheckedChangeListener { _, isChecked ->//save in preference and start app with it
-            /*if (isChecked) {
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+            //startActivity(Intent(requireContext(), SplashActivity::class.java))
+        }
+
+        toggleLight.setOnClickListener {
+            sharedPreferences.edit().putBoolean(DARK_THEME, false).apply()
+            //  Toast.makeText(requireContext(),"else isChecked SettingsFragment MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
+
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+        }
+       /* switchTheme.setOnCheckedChangeListener { _, isChecked ->//save in preference and start app with it
+            *//*if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
 
             } else {
 
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-            }*/
+            }*//*
 
             if (isChecked) {
-                sharedPreferences.edit().putBoolean(DARKTHEME,true).apply()
-              //  Toast.makeText(requireContext(),"isChecked SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
+                sharedPreferences.edit().putBoolean(DARK_THEME, true).apply()
+                //  Toast.makeText(requireContext(),"isChecked SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
 
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-               //startActivity(Intent(requireContext(), SplashActivity::class.java))
+                //startActivity(Intent(requireContext(), SplashActivity::class.java))
 
             } else {
-                sharedPreferences.edit().putBoolean(DARKTHEME,false).apply()
-              //  Toast.makeText(requireContext(),"else isChecked SettingsFragment MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
+                sharedPreferences.edit().putBoolean(DARK_THEME, false).apply()
+                //  Toast.makeText(requireContext(),"else isChecked SettingsFragment MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
 
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-               //startActivity(Intent(requireContext(), SplashActivity::class.java))
+                //startActivity(Intent(requireContext(), SplashActivity::class.java))
             }
+        }*/
+
+        imgbtnprofile.setOnClickListener {
+            //show bottomsheet
+            if (this::pictureList.isInitialized) {
+                val action =
+                    SettingsFragmentDirections.actionSettingsFragmentToBottomSheetProfilePictures(
+                        pictureList
+                    )
+                findNavController().navigate(action)
+            }
+         //   bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+           // recyclerview.adapter = PictureAdapter(pictureList,bottomSheetBehavior,this)
+
         }
 
         tvSignOut.setOnClickListener {
@@ -132,7 +222,18 @@ class SettingsFragment : Fragment() {
         tvSignOut = view.findViewById(R.id.tvSignOut)
         engLang = view.findViewById(R.id.engLang)
         arLang = view.findViewById(R.id.arLang)
-        switchTheme = view.findViewById(R.id.switchTheme)
+        toggleLight = view.findViewById(R.id.toggleLight)
+        toggleDark = view.findViewById(R.id.toggleDark)
+       // switchTheme = view.findViewById(R.id.switchTheme)
+        imgbtnprofile = view.findViewById(R.id.imgbtnprofile)
+        imgprofile = view.findViewById(R.id.imgprofile)
+        //bottomSheet=view.findViewById(R.id.settingsLayout)//
+      //  recyclerview= view.findViewById(R.id.recyclerviewprofile)//
+       /* bottomSheet = view.findViewById(R.id.main_bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN*/
+
+
     }
 
     private fun setLocale(activity: Activity, languageCode: String) {
@@ -145,41 +246,53 @@ class SettingsFragment : Fragment() {
         startActivity(Intent(requireContext(), MainActivity::class.java))
         activity.finish();
     }
+
+   /* override fun onItemClick(item: String?) {
+       // Snackbar.make(coordinatorLayout!!, "$item is selected", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+        item?.let{
+        imgprofile.load(it)
+       // bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+    }*/
+
+
+
+
 }
-    ////////////////theme practice/////////////
+////////////////theme practice/////////////
 
-    /*class activity:AppCompatActivity() {
-        private lateinit var switchTheme: Switch
-        private lateinit var Preferences: SharedPreferences
-        override fun onCreate(savedInstanceState: Bundle?) {
-            Preferences=this.getSharedPreferences(PREFERENCE, MODE_PRIVATE)
+/*class activity:AppCompatActivity() {
+    private lateinit var switchTheme: Switch
+    private lateinit var Preferences: SharedPreferences
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Preferences=this.getSharedPreferences(PREFERENCE, MODE_PRIVATE)
 
-            if (Preferences.getBoolean(DARKTHEME,false)) {
-                setTheme(R.style.DarkTheme)
+        if (Preferences.getBoolean(DARKTHEME,false)) {
+            setTheme(R.style.DarkTheme)
+        } else {
+            setTheme(R.style.AppTheme)
+        }
+        if (Preferences.getBoolean(DARKTHEME,false)) {
+            switchTheme.isChecked = true
+        }
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        switchTheme = findViewById<View>(R.id.enableDark) as Switch
+
+
+        switchTheme.setOnCheckedChangeListener { button, isCheked ->
+            if (isCheked) {
+                Preferences.edit().putBoolean(DARKTHEME,true).apply()
+                startActivity(Intent(requireContext(), MainActivity::class.java))
             } else {
-                setTheme(R.style.AppTheme)
-            }
-            if (Preferences.getBoolean(DARKTHEME,false)) {
-                switchTheme.isChecked = true
-            }
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main)
-
-            switchTheme = findViewById<View>(R.id.enableDark) as Switch
-
-
-            switchTheme.setOnCheckedChangeListener { button, isCheked ->
-                if (isCheked) {
-                    Preferences.edit().putBoolean(DARKTHEME,true).apply()
-                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                } else {
-                    Preferences.edit().putBoolean(DARKTHEME,false).apply()
-                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                }
-
+                Preferences.edit().putBoolean(DARKTHEME,false).apply()
+                startActivity(Intent(requireContext(), MainActivity::class.java))
             }
 
         }
-    }*/
+
+    }
+}*/
 
 

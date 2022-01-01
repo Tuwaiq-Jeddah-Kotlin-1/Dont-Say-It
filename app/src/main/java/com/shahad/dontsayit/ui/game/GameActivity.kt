@@ -40,6 +40,7 @@ class GameActivity : AppCompatActivity() {
     private val roomContentMap = mutableMapOf<String, String>()
     private val playersMapWithWords = mutableMapOf<Int, MutableList<String>>()
     private val playersStateListWithoutCurrentPlayer: MutableList<String> = mutableListOf()
+    private val playersPicListWithoutCurrentPlayer: MutableList<String> = mutableListOf()
     private var listOfStateInPlayerName: MutableList<String> = mutableListOf()
     private val playersScore: MutableList<Int> = mutableListOf()
     private var playersListWithoutCurrentPlayer: List<String> = listOf()
@@ -52,12 +53,14 @@ class GameActivity : AppCompatActivity() {
     private lateinit var stateRef: DatabaseReference
     private lateinit var roundRef: DatabaseReference
     private lateinit var scoreRef: DatabaseReference
+    private lateinit var picRef: DatabaseReference
 
     private lateinit var roomListener: ChildEventListener
     private lateinit var playersListener: ChildEventListener
     private lateinit var wordListener: ValueEventListener
     private lateinit var scoreListener: ChildEventListener
     private lateinit var stateListener: ChildEventListener
+    private lateinit var profilePicListener: ChildEventListener
     private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +94,7 @@ class GameActivity : AppCompatActivity() {
         roomRef = database.getReference("rooms/$roomName")
         wordRef = database.getReference("rooms/${roomName}/players")
         stateRef = database.getReference("rooms/${roomName}/state")
+        picRef = database.getReference("rooms/${roomName}/picture")
         roundRef = database.getReference("rooms/${roomName}/round")
         hostRef = database.getReference("rooms/${roomName}/host")
         scoreRef = database.getReference("rooms/${roomName}/score")
@@ -109,11 +113,10 @@ class GameActivity : AppCompatActivity() {
             if (playersList.size < 2) {
                 Toast.makeText(this, "not enough players to start the game", Toast.LENGTH_LONG)
                     .show()
-                btnStart.isEnabled=true
+                btnStart.isEnabled = true
 
             }
         }
-
 
         roundNumberObserver()
         addRoomEventListener()
@@ -121,6 +124,7 @@ class GameActivity : AppCompatActivity() {
         addWordEventListener()
         addStateEventListener()
         addScoreEventListener()
+        addPicEventListener()
 
     }
 
@@ -262,7 +266,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun addRoomEventListener() {
-        roomListener =  roomRef.addChildEventListener(object : ChildEventListener {
+        roomListener = roomRef.addChildEventListener(object : ChildEventListener {
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 //     if (snapshot.key != playerName && snapshot.key != "message") {
@@ -320,9 +324,9 @@ class GameActivity : AppCompatActivity() {
                     Toast.makeText(this@GameActivity, "Host closed the lobby", Toast.LENGTH_LONG)
                         .show()
 
-                   /* if (dialog.isShowing) {//lateinit property dialog has not been initialized
-                        dialog.dismiss()
-                    }*/
+                    /* if (dialog.isShowing) {//lateinit property dialog has not been initialized
+                         dialog.dismiss()
+                     }*/
 
                     finish()
                 }
@@ -345,7 +349,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun addPlayersListener() {
-        playersListener =  wordRef.addChildEventListener(object : ChildEventListener {
+        playersListener = wordRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 playersList.add(snapshot.key.toString())
                 playersScore.add(0)
@@ -358,13 +362,18 @@ class GameActivity : AppCompatActivity() {
                 if (snapshot.key != playerName) {
                     playersStateListWithoutCurrentPlayer.add(
                         playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()), "in"
+
+
                     )
-                    Log.i("playersStateListWithoutCurrentPlayer ADD", playersStateListWithoutCurrentPlayer.toString())
+                    Log.i(
+                        "playersStateListWithoutCurrentPlayer ADD",
+                        playersStateListWithoutCurrentPlayer.toString()
+                    )
 
                 }
 
-                if (hostName==playerName){
-                    btnStart.isEnabled=true
+                if (hostName == playerName) {
+                    btnStart.isEnabled = true
                 }
             }
 
@@ -394,6 +403,12 @@ class GameActivity : AppCompatActivity() {
                             snapshot.key.toString()
                         )
                     )//java.lang.ArrayIndexOutOfBoundsException: length=10; index=-1
+
+                    playersPicListWithoutCurrentPlayer.removeAt(
+                        playersListWithoutCurrentPlayer.indexOf(
+                            snapshot.key.toString()
+                        )
+                    )
                 }
                 /* Log.i(
                      "INDEX ERROR playerMapState $playerName=${snapshot.key}",
@@ -442,7 +457,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun addWordEventListener() {
-        wordListener =  wordRef.addValueEventListener(object : ValueEventListener {
+        wordListener = wordRef.addValueEventListener(object : ValueEventListener {
             //when button clicked words changes and this is activated
             override fun onDataChange(snapshot: DataSnapshot) {
                 //change received
@@ -451,7 +466,9 @@ class GameActivity : AppCompatActivity() {
                     playersMapWithWords,
                     roomName,
                     playerName,
-                    playersStateListWithoutCurrentPlayer
+                    playersStateListWithoutCurrentPlayer,
+                    playersPicListWithoutCurrentPlayer,
+                    this@GameActivity
                 )
 
             }
@@ -462,7 +479,9 @@ class GameActivity : AppCompatActivity() {
                     playersMapWithWords,
                     roomName,
                     playerName,
-                    playersStateListWithoutCurrentPlayer
+                    playersStateListWithoutCurrentPlayer,
+                    playersPicListWithoutCurrentPlayer,
+                    this@GameActivity
                 )
 
             }
@@ -471,7 +490,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun addStateEventListener() {
-        stateListener =  stateRef.addChildEventListener(object : ChildEventListener {
+        stateListener = stateRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
                 /*if (snapshot.key != playerName) {
@@ -484,14 +503,22 @@ class GameActivity : AppCompatActivity() {
                 //   Log.i("playerMapWord state", playersStateListWithoutCurrentPlayer.toString())
 
                 //   Log.i("state", snapshot.toString())
-                Log.e("$playerName after state onChildAdded PLAYERS", playersListWithoutCurrentPlayer.toString())
-                Log.e("$playerName after state onChildAdded", playersStateListWithoutCurrentPlayer.toString())
+                Log.e(
+                    "$playerName after state onChildAdded PLAYERS",
+                    playersListWithoutCurrentPlayer.toString()
+                )
+                Log.e(
+                    "$playerName after state onChildAdded",
+                    playersStateListWithoutCurrentPlayer.toString()
+                )
 
                 recyclerview.adapter = GameAdapter(
                     playersMapWithWords,
                     roomName,
                     playerName,
-                    playersStateListWithoutCurrentPlayer
+                    playersStateListWithoutCurrentPlayer,
+                    playersPicListWithoutCurrentPlayer,
+                    this@GameActivity
                 )
 
             }
@@ -534,12 +561,12 @@ class GameActivity : AppCompatActivity() {
 
                     viewModel.getScore(scoreRef.child(listOfStateInPlayerName[0])).observe(
                         this@GameActivity, {
-                         //   Log.i("$hostName guest ", it.toString())
+                            //   Log.i("$hostName guest ", it.toString())
 
                             if (hostName == playerName) {
-                             //   Log.i("Host ", it.toString())
+                                //   Log.i("Host ", it.toString())
                                 scoreRef.child(listOfStateInPlayerName[0]).setValue(it.toInt() + 1)
-                             //   Log.i("Host ", it.toString())
+                                //   Log.i("Host ", it.toString())
                                 //  playersScore[playersList.indexOf(snapshot.key)] = it.toInt() + 1
 
                             }
@@ -552,25 +579,71 @@ class GameActivity : AppCompatActivity() {
                 //declare winner
                 //make start btn enabled
 
-                Log.e("$playerName after state onChildChanged PLAYERS", playersListWithoutCurrentPlayer.toString())
-                Log.e("$playerName after state onChildChanged", playersStateListWithoutCurrentPlayer.toString())
+                Log.e(
+                    "$playerName after state onChildChanged PLAYERS",
+                    playersListWithoutCurrentPlayer.toString()
+                )
+                Log.e(
+                    "$playerName after state onChildChanged",
+                    playersStateListWithoutCurrentPlayer.toString()
+                )
 
                 //  Log.i("state", snapshot.toString())
                 recyclerview.adapter = GameAdapter(
                     playersMapWithWords,
                     roomName,
                     playerName,
-                    playersStateListWithoutCurrentPlayer
+                    playersStateListWithoutCurrentPlayer,
+                    playersPicListWithoutCurrentPlayer,
+                    this@GameActivity
                 )
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 //       Log.i("state", snapshot.toString())
                 //playersStateListWithoutCurrentPlayer.remove(snapshot.value.toString())
-                Log.e("$playerName before state onChildRemoved PLAYERS", playersListWithoutCurrentPlayer.toString())
+                Log.e(
+                    "$playerName before state onChildRemoved PLAYERS",
+                    playersListWithoutCurrentPlayer.toString()
+                )
 
-           //     playersStateListWithoutCurrentPlayer.remove(snapshot.value.toString())
-                Log.e("$playerName after state onChildRemoved", playersStateListWithoutCurrentPlayer.toString())
+                //     playersStateListWithoutCurrentPlayer.remove(snapshot.value.toString())
+                Log.e(
+                    "$playerName after state onChildRemoved",
+                    playersStateListWithoutCurrentPlayer.toString()
+                )
+
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+ private fun addPicEventListener() {
+        profilePicListener = picRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+             if (playerName!=snapshot.key) {
+                 Log.e("$playerName add pic for ${snapshot.key}","with value of ${snapshot.value}")
+                 playersPicListWithoutCurrentPlayer.add(
+                     playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()),
+                     snapshot.value.toString()
+                 )
+             }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
 
 
             }
@@ -587,9 +660,9 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun addScoreEventListener() {
-        scoreListener =   scoreRef.addChildEventListener(object : ChildEventListener {
+        scoreListener = scoreRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-               // TODO("Not yet implemented")
+
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -598,15 +671,15 @@ class GameActivity : AppCompatActivity() {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-              //  TODO("Not yet implemented")
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-              //  TODO("Not yet implemented")
+
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
 
         })
@@ -639,10 +712,14 @@ class GameActivity : AppCompatActivity() {
             Log.i("onDestroy Game", "stateRef isInitialized")
 
         }
+    if (this::picRef.isInitialized) {
+        picRef.removeEventListener(profilePicListener)
+            Log.i("onDestroy Game", "picRef isInitialized")
+
+        }
         //viewModel.getRound().removeObserver()
 
 // check if room still in db and remove it
-
 
 
     }

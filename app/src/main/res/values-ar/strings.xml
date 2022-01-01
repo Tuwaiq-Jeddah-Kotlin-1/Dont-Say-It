@@ -15,15 +15,19 @@
     <string name="already_have_an_account">تسجيل دخول</string>
     <string name="don_t_have_an_account">إنشاء حساب</string>
     <string name="contentDescription_players_list">اللاعبين</string>
-    <string name="dark_theme_tv">التنسيق الداكن</string>
+    <string name="dark_theme_tv"> مظهر</string>
     <string name="title_sign_up">التسجيل</string>
     <string name="how_to_play">كيفية اللعب</string>
-    <string name="contentDescription_face_blinking_animation">رسوم متحركه لوجه يغمض عينيه</string>
+    <string name="contentDescription_face_blinking_animation">صوره شخصيه</string>
     <string name="create_lobby_btn">انشاء جلسة</string>
     <string name="players">عدد اللاعبين</string>
     <string name="lobby_keyword">رمز الغرفة</string>
     <string name="username_hint">اسم المستخدم</string>
     <string name="cancel">الغاء</string>
     <string name="game_details_dialog_header">تفاصيل الجلسة</string>
+    <string name="write_us_a_suggestion">اكتب لنا اقتراحك</string>
+    <string name="edit_text_suggestion">اقتراح</string>
+    <string name="suggest_btn_send">ارسال</string>
+    <string name="language">اللغة</string>
 
 </resources>

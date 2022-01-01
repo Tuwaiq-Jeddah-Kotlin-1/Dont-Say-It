@@ -1,12 +1,12 @@
-package com.shahad.dontsayit
+package com.shahad.dontsayit.notification
 
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
+import com.shahad.dontsayit.CHANNEL_ID
 
-class AppLifeCycle: Application() {
+class AppLifeCycle : Application() {
 
     override fun onCreate() {//when app created
         super.onCreate()

@@ -5,17 +5,6 @@ import android.widget.EditText
 import java.util.regex.Pattern
 
 
-const val PREFERENCE = "PREFERENCE"
-const val EMAIL = "EMAIL"
-const val UID = "UID"
-const val USERNAME = "USERNAME"
-const val CHANNEL_ID = "NOTIFICATION_CHANNEL_ID"
-const val NOTIFICATION_NAME = "NOTIFICATION"
-const val ROOM_NAME = "RoomName"
-const val HOST_NAME = "HOSTNAME"
-const val PLAYER_NAME = "playerName"
-const val DARKTHEME = "DARKTHEME"
-const val LANG = "LANG"
 
 private val hasUppercase = Pattern.compile("[A-Z]")
 private val hasLowercase = Pattern.compile("[a-z]")
@@ -82,7 +71,7 @@ fun EditText.validateUsername(userName: String): Boolean {
             this.error = "Username too long"
             false
         }
-        userName.length < 3 -> {
+        userName.length < 5 -> {
             this.error = "Username too short"
             false
         }

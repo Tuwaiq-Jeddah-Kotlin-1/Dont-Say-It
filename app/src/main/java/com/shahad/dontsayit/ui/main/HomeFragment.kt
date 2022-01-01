@@ -17,22 +17,23 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.*
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.R
-import com.shahad.dontsayit.data.model.Player
-import com.shahad.dontsayit.data.model.PlayerData
+import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.network.ViewModel
 import com.shahad.dontsayit.ui.game.GameActivity
 
 class HomeFragment : Fragment() {
-    private lateinit var btnCreateLobby: Button
-    private lateinit var btnJoinLobby: Button
-    private lateinit var btnHow: Button
+    private lateinit var btnCreateLobby: ImageButton
+    private lateinit var btnJoinLobby: ImageButton
+    private lateinit var btnHow: ImageButton
     private lateinit var imgBtnShare: ImageButton
+    private lateinit var imgbtnsuggest: ImageButton
     private lateinit var imgBtnSettings: ImageButton
     private val appUrl = "https://github.com/Tuwaiq-Jeddah-Kotlin-1/Dont-Say-It"
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var viewModel: ViewModel
 
     private var playerName = ""
+    private var profilePic = ""
     private var roomName = ""
     private var host = ""
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -44,10 +45,7 @@ class HomeFragment : Fragment() {
     private lateinit var roomsListener: ValueEventListener
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -61,12 +59,32 @@ class HomeFragment : Fragment() {
 
         roomsRef = database.getReference("rooms")
 
+
         btnCreateLobby.setOnClickListener {
-            createRoomDialog()
+            if (viewModel.checkConnection(requireContext())) {
+                createRoomDialog()
+            } else {
+                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
+            }
         }
         btnJoinLobby.setOnClickListener {
-            joinRoomDialog()
+            if (viewModel.checkConnection(requireContext())) {
+                joinRoomDialog()
+            } else {
+                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
+            }
         }
+        imgbtnsuggest.setOnClickListener {
+            if (viewModel.checkConnection(requireContext())) {
+            suggestionDialog()
+            }else{
+                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+
         btnHow.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_howToPlayFragment)
         }
@@ -82,10 +100,32 @@ class HomeFragment : Fragment() {
         addRoomsEventListener()
     }
 
+    private fun suggestionDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.suggestion_dialog)
+        val etSuggest: EditText = dialog.findViewById(R.id.etSuggestion)
+        val btnSuggest: Button = dialog.findViewById(R.id.btnSuggestion)
+
+        btnSuggest.setOnClickListener {
+            if (etSuggest.text.toString().isNotEmpty()) {
+                saveToAPI(etSuggest.text.toString())
+            }
+        }
+
+        dialog.show()
+
+    }
+
     private fun fillShared(uId: String) {
         viewModel.getUserById(uId).observe(viewLifecycleOwner, {
             sharedPreferences.edit().putString(USERNAME, it.username).apply()
             playerName = it.username
+            sharedPreferences.edit().putString(PIC, it.profilePic).apply()
+            profilePic = it.profilePic
+
+
+
+
         })
     }
 
@@ -95,6 +135,7 @@ class HomeFragment : Fragment() {
         btnHow = view.findViewById(R.id.btnHow)
         imgBtnShare = view.findViewById(R.id.imgBtnShare)
         imgBtnSettings = view.findViewById(R.id.imgBtnSettings)
+        imgbtnsuggest = view.findViewById(R.id.imgbtnsuggest)
 
     }
 
@@ -109,20 +150,24 @@ class HomeFragment : Fragment() {
         roomRef = database.getReference("rooms/${roomName}/host")
         roomRef.setValue(playerName)
     }
+
     private fun setRound() {
         //add host name
         roomRef = database.getReference("rooms/${roomName}/round")
         roomRef.setValue(0)
     }
+
     private fun addPlayer() {
         //add player
         roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
         roomRef.setValue("$playerName word?")
-
         roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
         roomRef.setValue("in")
         roomRef = database.getReference("rooms/${roomName}/score/${playerName}")
         roomRef.setValue(0)
+        roomRef = database.getReference("rooms/${roomName}/picture/${playerName}")
+        roomRef.setValue(profilePic)
+
     }
 
     private fun reducePlayersNum(num: DataSnapshot) {
@@ -151,7 +196,7 @@ class HomeFragment : Fragment() {
             roomCreateJoin = true
 
             if (edKeyword.text.toString() != "") {
-                btnCreateLobby.text = getString(R.string.create_lobby_btn)
+              //  btnCreateLobby.text = getString(R.string.create_lobby_btn)
                 btnCreateLobby.isEnabled = false
                 roomName = edKeyword.text.toString()
 
@@ -366,4 +411,15 @@ class HomeFragment : Fragment() {
         })
     }
 
+
+    private fun saveToAPI(value: String) {
+        val suggestions = UserSuggestions()
+        suggestions.suggestion = value
+        viewModel.userRequests(suggestions)
+        Toast.makeText(
+            context,
+            "Thank you for being a part of this game \uD83E\uDD73",
+            Toast.LENGTH_LONG
+        ).show()
+    }
 }
