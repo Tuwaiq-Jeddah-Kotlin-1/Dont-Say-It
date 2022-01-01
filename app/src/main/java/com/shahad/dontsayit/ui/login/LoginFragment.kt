@@ -1,6 +1,5 @@
 package com.shahad.dontsayit.ui.login
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -10,12 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.shahad.dontsayit.EMAIL
-import com.shahad.dontsayit.PREFERENCE
 import com.shahad.dontsayit.R
 import com.shahad.dontsayit.checkIfEmpty
 import com.shahad.dontsayit.data.network.ViewModel
@@ -42,25 +40,30 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         findView(view)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
-       /* sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-        val emailPref = sharedPreferences.getString(EMAIL, null)
+        /* sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
+         val emailPref = sharedPreferences.getString(EMAIL, null)
 
-        if (emailPref != null) {
-            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-        }*/
+         if (emailPref != null) {
+             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+         }*/
         btnLogin.setOnClickListener {
-            if (sendToCheck()) {
-                viewModel.signIn(
-                    etEmail.text.toString().trim(),
-                    etPassword.text.toString().trim(), findNavController()
-                )
-                Log.i("signin", "login checked")
+            if (viewModel.checkConnection(requireContext())) {
+                if (sendToCheck()) {
+                    viewModel.signIn(
+                        etEmail.text.toString().trim(),
+                        etPassword.text.toString().trim(), findNavController()
+                    )
+                    Log.i("signin", "login checked")
 
 
-                /*  if (emailPref != null) {
+                    /*  if (emailPref != null) {
                   Toast.makeText(view.context, emailPref, Toast.LENGTH_LONG).show()
                   findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                   }*/
+
+                }
+            }else{
+                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
 
             }
         }

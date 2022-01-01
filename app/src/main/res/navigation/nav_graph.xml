@@ -23,6 +23,14 @@
         <argument
             android:name="user"
             app:argType="com.shahad.dontsayit.data.model.User" />
+        <action
+            android:id="@+id/action_settingsFragment_to_bottomSheetProfilePictures"
+            app:destination="@id/bottomSheetProfilePictures"
+            app:enterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/from_top"/>
+        <argument
+            android:name="profilePic"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -51,6 +59,13 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@+id/nav_graph"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_signupFragment_to_bottomSheetProfilePictures"
+            app:destination="@id/bottomSheetProfilePictures" />
+        <argument
+            android:name="picUrl"
+            app:argType="string"
+            android:defaultValue="https://firebasestorage.googleapis.com/v0/b/don-t-say-it.appspot.com/o/pic_a.png?alt=media&amp;token=e7dccd9e-7141-4255-9987-8de76769c450" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -67,4 +82,20 @@
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/bottomSheetProfilePictures"
+        android:name="com.shahad.dontsayit.ui.BottomSheetProfilePictures"
+        android:label="bottom_sheet_profile_pictures"
+        tools:layout="@layout/bottom_sheet_profile_pictures" >
+        <argument
+            android:name="picUrlList"
+            app:argType="com.shahad.dontsayit.data.model.ProfilePicture[]" />
+        <action
+            android:id="@+id/action_bottomSheetProfilePictures_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_bottomSheetProfilePictures_to_signupFragment"
+            app:destination="@id/signupFragment" />
+    </dialog>
+
 </navigation>

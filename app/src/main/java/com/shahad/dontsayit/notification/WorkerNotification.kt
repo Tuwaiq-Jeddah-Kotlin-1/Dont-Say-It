@@ -1,12 +1,15 @@
-package com.shahad.dontsayit
+package com.shahad.dontsayit.notification
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.shahad.dontsayit.CHANNEL_ID
+import com.shahad.dontsayit.NOTIFICATION_NAME
 
-class WorkerNotification(private val context: Context, workParams: WorkerParameters) : Worker(context, workParams) {
+class WorkerNotification(private val context: Context, workParams: WorkerParameters) :
+    Worker(context, workParams) {
     override fun doWork(): Result {
         val notification =
             NotificationCompat.Builder(context, CHANNEL_ID).setTicker(NOTIFICATION_NAME)

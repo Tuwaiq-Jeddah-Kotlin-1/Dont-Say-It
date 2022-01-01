@@ -17,10 +17,10 @@
     <string name="contentDescription_share">share</string>
     <string name="arabic" translatable="false">العربيه</string>
     <string name="english" translatable="false">English</string>
-    <string name="dark_theme_tv">Dark Theme</string>
+    <string name="dark_theme_tv">Theme</string>
     <string name="contentDescription_edit_username">edit username</string>
     <string name="contentDescription_players_list">players list</string>
-    <string name="contentDescription_face_blinking_animation">face blinking animation</string>
+    <string name="contentDescription_face_blinking_animation">profile picture</string>
     <string name="already_have_an_account">already have an account?</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="how_to_play">how to play</string>
@@ -29,6 +29,10 @@
     <string name="username_hint">username</string>
     <string name="cancel">Cancel</string>
     <string name="game_details_dialog_header">Game Details</string>
+    <string name="write_us_a_suggestion">Write us a Suggestion</string>
+    <string name="edit_text_suggestion">suggestion</string>
+    <string name="suggest_btn_send">Send</string>
+    <string name="language">Language</string>
 
 
 </resources>

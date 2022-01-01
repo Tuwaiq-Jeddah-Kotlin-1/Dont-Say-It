@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvSuggestion"
+        android:text="@string/write_us_a_suggestion"
+        android:layout_width="wrap_content"
+        android:layout_margin="10dp"
+
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/etSuggestion"
+        android:hint="@string/edit_text_suggestion"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnSuggestion"
+        android:text="@string/suggest_btn_send"
+        android:layout_margin="10dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
+
+</LinearLayout>

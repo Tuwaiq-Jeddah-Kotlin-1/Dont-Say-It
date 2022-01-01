@@ -1,16 +1,19 @@
-package com.shahad.dontsayit
+package com.shahad.dontsayit.ui
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import com.shahad.dontsayit.DARK_THEME
+import com.shahad.dontsayit.LANG
+import com.shahad.dontsayit.PREFERENCE
+import com.shahad.dontsayit.R
 import com.shahad.dontsayit.ui.main.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,19 +30,19 @@ class SplashActivity : AppCompatActivity() {
 
         //get theme and lang from shared preference
         sharedPreferences = this.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-        if (sharedPreferences.getBoolean(DARKTHEME,false)) {
+        if (sharedPreferences.getBoolean(DARK_THEME, false)) {
             //setTheme(R.style.Theme_DontSayItNight)//.DarkTheme)
-             //   Toast.makeText(this,"SplashActivity MODE_NIGHT_YES",Toast.LENGTH_SHORT).show()
+            //   Toast.makeText(this,"SplashActivity MODE_NIGHT_YES",Toast.LENGTH_SHORT).show()
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
         } else {
             //setTheme(R.style.Theme_DontSayIt) //.AppTheme)
-          //  Toast.makeText(this,"SplashActivity MODE_NIGHT_NO",Toast.LENGTH_SHORT).show()
+            //  Toast.makeText(this,"SplashActivity MODE_NIGHT_NO",Toast.LENGTH_SHORT).show()
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
 
-        if (sharedPreferences.getString(LANG,"en")=="ar"){
+        if (sharedPreferences.getString(LANG, "en") == "ar") {
             setLocale(this, "ar")
-        }else{
+        } else {
             setLocale(this, "en")
         }
 
@@ -51,6 +54,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
     }
+
     private fun setLocale(activity: Activity, languageCode: String) {
         val locale = Locale(languageCode)
         Locale.setDefault(locale)
