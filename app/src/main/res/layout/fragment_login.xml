@@ -46,25 +46,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etEmail" />-->
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/OutlinedRoundedBox"
         android:id="@+id/emaillayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="20sp"
         android:layout_marginLeft="20sp"
-        app:boxBackgroundColor="@color/white"
-        app:boxBackgroundMode="outline"
         android:layout_marginTop="100dp"
         app:layout_constraintBottom_toTopOf="@+id/passwordlayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginTitle">
         <com.google.android.material.textfield.TextInputEditText
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:backgroundTint="#99ffffff"
             android:inputType="textEmailAddress"
             android:hint="@string/email"
             android:textSize="20sp"
@@ -75,27 +72,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/OutlinedRoundedBox"
         android:id="@+id/passwordlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="20sp"
         android:layout_marginLeft="20sp"
         android:layout_marginTop="10sp"
-        app:boxBackgroundColor="@color/white"
-        app:boxBackgroundMode="outline"
         app:passwordToggleEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/btnRegister"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emaillayout">
         <com.google.android.material.textfield.TextInputEditText
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:backgroundTint="#99ffffff"
             android:inputType="textPassword"
             android:hint="@string/password"
             android:textSize="20sp"
@@ -115,15 +108,23 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordlayout" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_marginTop="80dp"
         android:text="@string/title_log_in"
+        android:background="@drawable/btn_green_nobg"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordlayout" />
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_log_in"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
+        app:layout_constraintEnd_toEndOf="@+id/btnLogin"
+        app:layout_constraintStart_toStartOf="@+id/btnLogin"
+        app:layout_constraintTop_toTopOf="@+id/btnLogin" />
 </androidx.constraintlayout.widget.ConstraintLayout>

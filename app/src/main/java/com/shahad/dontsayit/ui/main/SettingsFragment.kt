@@ -32,7 +32,8 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
     //private lateinit var recyclerview: RecyclerView//
     private lateinit var etUsername: EditText
     private lateinit var btnEditUsername: ImageButton
-    private lateinit var imgbtnprofile: ImageButton
+    private lateinit var back: ImageButton
+    private lateinit var imgbtnprofile: TextView
     private lateinit var imgprofile: ImageView
     private lateinit var tvEmail: TextView
     private lateinit var tvSignOut: TextView
@@ -146,6 +147,11 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
                 sharedPreferences.edit().putString(USERNAME, username).apply()
             }
         }
+
+        back.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
+
+        }
         engLang.setOnClickListener {//save in preference and start app with it, get words with it
             sharedPreferences.edit().putString(LANG, "en").apply()
             setLocale(requireActivity(), "en")
@@ -227,6 +233,7 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
        // switchTheme = view.findViewById(R.id.switchTheme)
         imgbtnprofile = view.findViewById(R.id.imgbtnprofile)
         imgprofile = view.findViewById(R.id.imgprofile)
+        back = view.findViewById(R.id.back)
         //bottomSheet=view.findViewById(R.id.settingsLayout)//
       //  recyclerview= view.findViewById(R.id.recyclerviewprofile)//
        /* bottomSheet = view.findViewById(R.id.main_bottom_sheet)

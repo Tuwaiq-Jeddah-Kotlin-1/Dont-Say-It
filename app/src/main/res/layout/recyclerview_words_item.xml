@@ -6,12 +6,12 @@
 
     <TextView
         android:id="@+id/tvWord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/item_bg"
+        android:background="@drawable/tornpaper_trans"
         android:elevation="6sp"
-        android:hint="@string/word_textview"
+        android:hint="Everything"
         android:paddingStart="20dp"
         android:paddingTop="10dp"
         android:paddingEnd="20dp"
@@ -21,11 +21,11 @@
 
     <ImageView
         android:id="@+id/imgPlayerAnimation"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignTop="@id/tvWord"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:contentDescription="@string/contentDescription_face_blinking_animation"
         android:src="@drawable/ic_face" />
 

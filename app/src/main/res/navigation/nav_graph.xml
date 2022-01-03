@@ -9,7 +9,13 @@
         android:id="@+id/howToPlayFragment"
         android:name="com.shahad.dontsayit.ui.main.HowToPlayFragment"
         android:label="fragment_how_to_play"
-        tools:layout="@layout/fragment_how_to_play" />
+        tools:layout="@layout/fragment_how_to_play" >
+        <action
+            android:id="@+id/action_howToPlayFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.shahad.dontsayit.ui.main.SettingsFragment"
@@ -31,6 +37,11 @@
         <argument
             android:name="profilePic"
             app:argType="string" />
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/loginFragment"

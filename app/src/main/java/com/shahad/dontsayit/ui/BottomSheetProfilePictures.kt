@@ -22,7 +22,7 @@ import com.shahad.dontsayit.data.network.ViewModel
 
 class BottomSheetProfilePictures : BottomSheetDialogFragment(), PictureAdapter.ItemListener {
     private lateinit var recyclerview: RecyclerView//
-    private lateinit var pictureList: Array<ProfilePicture> //
+   // private lateinit var pictureList: Array<ProfilePicture> //
     private lateinit var viewModel: ViewModel
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -54,8 +54,8 @@ class BottomSheetProfilePictures : BottomSheetDialogFragment(), PictureAdapter.I
 
         val args: BottomSheetProfilePicturesArgs by navArgs()
         args.let {
-            pictureList = args.picUrlList
-            recyclerview.adapter = PictureAdapter(pictureList, this)
+           // pictureList = args.picUrlList
+            recyclerview.adapter = PictureAdapter(args.picUrlList, this)
         }
 
 
