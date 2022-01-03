@@ -19,6 +19,7 @@ class ScoreAdapter(private val playersList: List<String>, private val ScoreList:
     override fun onBindViewHolder(holder: ItemAdapter, position: Int) {
         val sortedScore = ScoreList.sorted()
         holder.num.text = "${position + 1}."
+
         holder.playerName.text = playersList[position]//username
         holder.score.text = ScoreList[position].toString()//score
     }
