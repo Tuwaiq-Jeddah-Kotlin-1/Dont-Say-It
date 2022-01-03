@@ -27,10 +27,10 @@ class SignupFragment : Fragment() {
     private lateinit var etUsername: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
-    private lateinit var btnSignup: Button
+    private lateinit var btnSignup: ImageButton
     private lateinit var btnLogin: TextView
     private lateinit var imgprofile: ImageView
-    private lateinit var imgbtnprofile: ImageButton
+    private lateinit var imgbtnprofile: TextView
     private lateinit var pictureList: Array<ProfilePicture>//
     private  var chosenPic: String="https://firebasestorage.googleapis.com/v0/b/don-t-say-it.appspot.com/o/pic_f.png?alt=media&token=719784e8-9b96-473d-9eb7-5908302cf9d0"//default pic
     override fun onCreateView(

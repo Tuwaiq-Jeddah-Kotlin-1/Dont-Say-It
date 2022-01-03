@@ -104,11 +104,13 @@ class HomeFragment : Fragment() {
         val dialog = Dialog(requireContext())
         dialog.setContentView(R.layout.suggestion_dialog)
         val etSuggest: EditText = dialog.findViewById(R.id.etSuggestion)
-        val btnSuggest: Button = dialog.findViewById(R.id.btnSuggestion)
+        val btnSuggest: ImageButton = dialog.findViewById(R.id.btnSuggestion)
 
         btnSuggest.setOnClickListener {
             if (etSuggest.text.toString().isNotEmpty()) {
                 saveToAPI(etSuggest.text.toString())
+                dialog.dismiss()
+
             }
         }
 
@@ -180,10 +182,10 @@ class HomeFragment : Fragment() {
         var chosen = 2
 
         val dialog = Dialog(requireContext())
-        dialog.setContentView(R.layout.dialog)
+        dialog.setContentView(R.layout.create_dialog)
         var edKeyword: EditText = dialog.findViewById(R.id.keyword)
-        var btnCreate: Button = dialog.findViewById(R.id.btnCreate)
-        var btnCancel: Button = dialog.findViewById(R.id.btnCancel)
+        var btnCreate: ImageButton = dialog.findViewById(R.id.btnCreate)
+        var btnCancel: ImageButton = dialog.findViewById(R.id.btnCancel)
         var numPick: NumberPicker = dialog.findViewById(R.id.numberPicker)
         numPick.maxValue = 6;
         numPick.minValue = 2;
@@ -250,15 +252,13 @@ class HomeFragment : Fragment() {
 
     private fun joinRoomDialog() {
         val dialog = Dialog(requireContext())
-        dialog.setContentView(R.layout.dialog)
+        dialog.setContentView(R.layout.join_dialog)
+
         var edKeyword: EditText = dialog.findViewById(R.id.keyword)
-        var tvPlayers: TextView = dialog.findViewById(R.id.tvPlayers)
-        var btnJoin: Button = dialog.findViewById(R.id.btnCreate)
-        var btnCancel: Button = dialog.findViewById(R.id.btnCancel)
-        var numPick: NumberPicker = dialog.findViewById(R.id.numberPicker)
-        numPick.isVisible = false
-        tvPlayers.isVisible = false
-        btnJoin.text = getString(R.string.join_lobby_btn)
+        var btnJoin: ImageButton = dialog.findViewById(R.id.btnCreate)
+        var btnCancel: ImageButton = dialog.findViewById(R.id.btnCancel)
+
+      //  btnJoin.text = getString(R.string.join_lobby_btn)
         btnJoin.setOnClickListener {
             roomCreateJoin = true
 

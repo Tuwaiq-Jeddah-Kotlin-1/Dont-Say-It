@@ -26,6 +26,7 @@ class GameActivity : AppCompatActivity() {
     // private lateinit var imgBtnPlayers: ImageButton
     private lateinit var imgBtnScore: ImageButton
     private lateinit var btnStart: ImageButton
+    private lateinit var close: ImageButton
 
     private lateinit var viewModel: ViewModel
     private lateinit var preference: SharedPreferences
@@ -108,14 +109,19 @@ class GameActivity : AppCompatActivity() {
         }
 
         btnStart.setOnClickListener {//show recycler view with random words,start timer
-            assignWord()
-            addRoomEventListener()
+
             if (playersList.size < 2) {
                 Toast.makeText(this, "not enough players to start the game", Toast.LENGTH_LONG)
                     .show()
                 btnStart.isEnabled = true
 
+            }else{
+                assignWord()
+                addRoomEventListener()
             }
+        }
+        close.setOnClickListener {
+            onBackPressed()
         }
 
         roundNumberObserver()
@@ -130,7 +136,12 @@ class GameActivity : AppCompatActivity() {
 
     private fun roundNumberObserver() {
         viewModel.getRound(roundRef).observe(this, {
-            tvRoundTitle.text = "Round ${it.toInt()}"
+            if (it.toInt()==0) {
+                tvRoundTitle.text = "Round"
+            }else{
+                tvRoundTitle.text = "${it.toInt()}"
+
+            }
         })
     }
 
@@ -213,6 +224,7 @@ class GameActivity : AppCompatActivity() {
         // imgBtnPlayers = findViewById(R.id.imgbtnplayers)
         imgBtnScore = findViewById(R.id.imgbtnscore)
         btnStart = findViewById(R.id.btnStart)
+        close = findViewById(R.id.close)
         //  btnReset = findViewById(R.id.btnReset)
     }
 
