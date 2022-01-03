@@ -12,4 +12,10 @@
     <color name="light_purple">#cad4ec</color>
     <color name="light">#FFF5F5F5</color>
     <color name="dark_purple">#82B1FF</color>
+
+<color name="constBtn">#212121</color>
+    <color name="colorPrimary">#FFF5F5F5</color><!--//background-->
+    <color name="colorPrimaryVariant">#212121</color><!--//text-->
+    <color name="colorOnPrimary">#FFF5F5F5</color><!--//dialog back ground-->
+
 </resources>

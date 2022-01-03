@@ -19,5 +19,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
+<style name="constBtn" parent="">
+    <item name="color">#212121</item>
+</style>
+
 
 </resources>

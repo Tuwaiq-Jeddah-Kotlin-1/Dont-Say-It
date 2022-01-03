@@ -9,22 +9,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.network.ViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import java.util.*
 
 
@@ -36,7 +40,7 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
     private lateinit var imgbtnprofile: TextView
     private lateinit var imgprofile: ImageView
     private lateinit var tvEmail: TextView
-    private lateinit var tvSignOut: TextView
+    private lateinit var imgbtnSignOut: ImageButton
     private lateinit var engLang: MaterialButton
     private lateinit var arLang: MaterialButton
     private lateinit var toggleDark: MaterialButton
@@ -47,6 +51,8 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
     private val auth = FirebaseAuth.getInstance()
     private lateinit var username: String
     private lateinit var pictureList: Array<ProfilePicture>//
+    private lateinit var shake: Animation
+    private lateinit var scaleDown: Animation
 
     //
     //private lateinit var bottomSheet: ConstraintLayout
@@ -130,21 +136,27 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
         //
 
         btnEditUsername.setOnClickListener {
-            etUsername.isEnabled = !etUsername.isEnabled
-            etUsername.requestFocus()
-            if (etUsername.isEnabled) {
-                btnEditUsername.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_check)
+            GlobalScope.async(Dispatchers.Main) {
+                btnEditUsername.startAnimation(shake)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
 
-            } else {
-                btnEditUsername.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit)
-            }
-            if (etUsername.text.toString() != username) {
-                //update db with new username
-                username = etUsername.text.toString()
-                viewModel.updateUsername(username)
-                sharedPreferences.edit().putString(USERNAME, username).apply()
+                etUsername.isEnabled = !etUsername.isEnabled
+                etUsername.requestFocus()
+                if (etUsername.isEnabled) {
+                    btnEditUsername.background =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.check)
+
+                } else {
+                    btnEditUsername.background =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.draw)
+                }
+                if (etUsername.text.toString() != username) {
+                    //update db with new username
+                    username = etUsername.text.toString()
+                    viewModel.updateUsername(username)
+                    sharedPreferences.edit().putString(USERNAME, username).apply()
+                }
             }
         }
 
@@ -213,11 +225,16 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
 
         }
 
-        tvSignOut.setOnClickListener {
-            sharedPreferences.edit().clear().apply()
+        imgbtnSignOut.setOnClickListener {
+            GlobalScope.async(Dispatchers.Main) {
+                imgbtnSignOut.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+                sharedPreferences.edit().clear().apply()
             auth.signOut()
             findNavController().navigate(R.id.action_settingsFragment_to_loginFragment)
-        }
+        }}
 
     }
 
@@ -225,7 +242,7 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
         etUsername = view.findViewById(R.id.etUsername)
         btnEditUsername = view.findViewById(R.id.btnEditUsername)
         tvEmail = view.findViewById(R.id.tvEmail)
-        tvSignOut = view.findViewById(R.id.tvSignOut)
+        imgbtnSignOut = view.findViewById(R.id.imgbtnSignOut)
         engLang = view.findViewById(R.id.engLang)
         arLang = view.findViewById(R.id.arLang)
         toggleLight = view.findViewById(R.id.toggleLight)
@@ -240,6 +257,8 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN*/
 
+        shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
 
     }
 

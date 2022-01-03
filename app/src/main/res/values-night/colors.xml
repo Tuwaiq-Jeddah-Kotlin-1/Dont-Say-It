@@ -12,4 +12,9 @@
     <color name="light_purple">#cad4ec</color>
     <color name="light">#FFF5F5F5</color>
     <color name="dark_purple">#82B1FF</color>
+
+    <color name="colorPrimary">#212121</color><!--//background-->
+    <color name="colorPrimaryVariant">#212121</color><!--//text-->
+    <color name="colorOnPrimary">#424242</color><!--//dialog back ground-->
+
 </resources>

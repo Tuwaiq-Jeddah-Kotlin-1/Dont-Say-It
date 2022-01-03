@@ -1,6 +1,7 @@
 package com.shahad.dontsayit.ui.game
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -70,7 +71,7 @@ class GameAdapter(
             if (currentState == "in") {
                 stateRef.child(playerName).setValue("out")
                 holder.tvState.text = "out"//maybe i don't need to change it here but listener will make it change
-                  holder.itemView.setBackgroundColor(context.resources.getColor(R.color.light))
+                  holder.itemView.setBackgroundColor(Color.GRAY)
             }
             if (currentState == "out") {//in case winner or out,  maybe make winner unchangeable
                 stateRef.child(playerName).setValue("in")

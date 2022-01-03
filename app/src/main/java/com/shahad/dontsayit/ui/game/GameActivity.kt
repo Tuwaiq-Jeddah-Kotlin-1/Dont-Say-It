@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -114,6 +115,8 @@ class GameActivity : AppCompatActivity() {
                 Toast.makeText(this, "not enough players to start the game", Toast.LENGTH_LONG)
                     .show()
                 btnStart.isEnabled = true
+                btnStart.background =
+                    ContextCompat.getDrawable(this, R.drawable.play_button)
 
             }else{
                 assignWord()
@@ -191,6 +194,8 @@ class GameActivity : AppCompatActivity() {
             //}
         }
         btnStart.isEnabled = false
+        btnStart.background =
+            ContextCompat.getDrawable(this, R.drawable.gray_play_button)
     }
 
     private fun playersListDialog() {
@@ -215,6 +220,8 @@ class GameActivity : AppCompatActivity() {
         endOfRoundDialog.setMessage("better luck next round!")
         endOfRoundDialog.show()
         btnStart.isEnabled = true
+        btnStart.background =
+            ContextCompat.getDrawable(this, R.drawable.play_button)
     }
 
     private fun findView() {
@@ -386,6 +393,8 @@ class GameActivity : AppCompatActivity() {
 
                 if (hostName == playerName) {
                     btnStart.isEnabled = true
+                    btnStart.background =
+                        ContextCompat.getDrawable(this@GameActivity, R.drawable.play_button)
                 }
             }
 

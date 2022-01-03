@@ -9,8 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.core.view.isVisible
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,6 +24,10 @@ import com.shahad.dontsayit.R
 import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.network.ViewModel
 import com.shahad.dontsayit.ui.game.GameActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
 class HomeFragment : Fragment() {
     private lateinit var btnCreateLobby: ImageButton
@@ -31,6 +39,9 @@ class HomeFragment : Fragment() {
     private val appUrl = "https://github.com/Tuwaiq-Jeddah-Kotlin-1/Dont-Say-It"
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var viewModel: ViewModel
+    private lateinit var shake: Animation
+    private lateinit var scaleUp: Animation
+    private lateinit var scaleDown: Animation
 
     private var playerName = ""
     private var profilePic = ""
@@ -45,7 +56,11 @@ class HomeFragment : Fragment() {
     private lateinit var roomsListener: ValueEventListener
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -61,41 +76,81 @@ class HomeFragment : Fragment() {
 
 
         btnCreateLobby.setOnClickListener {
-            if (viewModel.checkConnection(requireContext())) {
-                createRoomDialog()
-            } else {
-                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
+            GlobalScope.async(Dispatchers.Main) {
+                btnCreateLobby.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+
+                if (viewModel.checkConnection(requireContext())) {
+                    createRoomDialog()
+                } else {
+                    Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
             }
         }
         btnJoinLobby.setOnClickListener {
-            if (viewModel.checkConnection(requireContext())) {
-                joinRoomDialog()
-            } else {
-                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
+            GlobalScope.async(Dispatchers.Main) {
+                btnJoinLobby.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+                if (viewModel.checkConnection(requireContext())) {
+                    joinRoomDialog()
+                } else {
+                    Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
-        imgbtnsuggest.setOnClickListener {
-            if (viewModel.checkConnection(requireContext())) {
-            suggestionDialog()
-            }else{
-                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-
-
 
         btnHow.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_howToPlayFragment)
+            GlobalScope.async(Dispatchers.Main) {
+                btnHow.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+                findNavController().navigate(R.id.action_homeFragment_to_howToPlayFragment)
+
+            }
         }
+
+        imgbtnsuggest.setOnClickListener {
+            GlobalScope.async(Dispatchers.Main) {
+                imgbtnsuggest.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+                if (viewModel.checkConnection(requireContext())) {
+                    suggestionDialog()
+                } else {
+                    Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+
         imgBtnSettings.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+            GlobalScope.async(Dispatchers.Main) {
+                imgBtnSettings.startAnimation(scaleUp)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+                findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+            }
         }
         imgBtnShare.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.putExtra(Intent.EXTRA_TEXT, appUrl)//change to url
-            intent.type = "text/plain"
-            startActivity(intent)
+            GlobalScope.async(Dispatchers.Main) {
+                imgBtnShare.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT, appUrl)//change to url
+                intent.type = "text/plain"
+                startActivity(intent)
+            }
         }
         addRoomsEventListener()
     }
@@ -107,12 +162,17 @@ class HomeFragment : Fragment() {
         val btnSuggest: ImageButton = dialog.findViewById(R.id.btnSuggestion)
 
         btnSuggest.setOnClickListener {
-            if (etSuggest.text.toString().isNotEmpty()) {
+            GlobalScope.async(Dispatchers.Main) {
+                btnSuggest.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
+
+                if (etSuggest.text.toString().isNotEmpty()) {
                 saveToAPI(etSuggest.text.toString())
                 dialog.dismiss()
 
             }
-        }
+        }}
 
         dialog.show()
 
@@ -125,9 +185,6 @@ class HomeFragment : Fragment() {
             sharedPreferences.edit().putString(PIC, it.profilePic).apply()
             profilePic = it.profilePic
 
-
-
-
         })
     }
 
@@ -138,7 +195,9 @@ class HomeFragment : Fragment() {
         imgBtnShare = view.findViewById(R.id.imgBtnShare)
         imgBtnSettings = view.findViewById(R.id.imgBtnSettings)
         imgbtnsuggest = view.findViewById(R.id.imgbtnsuggest)
-
+        shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+        scaleUp = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
     }
 
     private fun setPlayersNum(chosen: Int) {
@@ -195,10 +254,14 @@ class HomeFragment : Fragment() {
             chosen = numPicker.value
         }
         btnCreate.setOnClickListener {
-            roomCreateJoin = true
+            GlobalScope.async(Dispatchers.Main) {
+                btnCreate.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
 
+                roomCreateJoin = true
             if (edKeyword.text.toString() != "") {
-              //  btnCreateLobby.text = getString(R.string.create_lobby_btn)
+                //  btnCreateLobby.text = getString(R.string.create_lobby_btn)
                 btnCreateLobby.isEnabled = false
                 roomName = edKeyword.text.toString()
 
@@ -238,12 +301,17 @@ class HomeFragment : Fragment() {
 
                 }
             }
-        }
+        }}
         btnCancel.setOnClickListener {
-            edKeyword.text.clear()
-            chosen = 2
-            dialog.dismiss()
+            GlobalScope.async(Dispatchers.Main) {
+                btnCancel.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
 
+                edKeyword.text.clear()
+                chosen = 2
+                dialog.dismiss()
+            }
         }
 
 
@@ -258,30 +326,38 @@ class HomeFragment : Fragment() {
         var btnJoin: ImageButton = dialog.findViewById(R.id.btnCreate)
         var btnCancel: ImageButton = dialog.findViewById(R.id.btnCancel)
 
-      //  btnJoin.text = getString(R.string.join_lobby_btn)
+        //  btnJoin.text = getString(R.string.join_lobby_btn)
         btnJoin.setOnClickListener {
-            roomCreateJoin = true
+            GlobalScope.async(Dispatchers.Main) {
+                btnJoin.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
 
-            roomName = edKeyword.text.toString()
-            btnJoinLobby.isEnabled = false
+                roomCreateJoin = true
+                roomName = edKeyword.text.toString()
+                btnJoinLobby.isEnabled = false
+                //check if room exists
+                if (roomsList.contains(roomName)) {
+                    //check players number before adding another player
 
-            //check if room exists
-            if (roomsList.contains(roomName)) {
-                //check players number before adding another player
+                    checkPlayersNum(dialog)
 
-                checkPlayersNum(dialog)
-
-            } else {
-                Toast.makeText(requireContext(), "room doesn't exists", Toast.LENGTH_LONG).show()
-                btnJoinLobby.isEnabled = true
+                } else {
+                    Toast.makeText(requireContext(), "room doesn't exists", Toast.LENGTH_LONG)
+                        .show()
+                    btnJoinLobby.isEnabled = true
+                }
             }
-
-
         }
         btnCancel.setOnClickListener {
-            edKeyword.text.clear()
-            dialog.dismiss()
+            GlobalScope.async(Dispatchers.Main) {
+                btnCancel.startAnimation(scaleDown)
+                // btnCreateLobby.startAnimation(bounce)
+                delay(100)
 
+                edKeyword.text.clear()
+                dialog.dismiss()
+            }
 
         }
 

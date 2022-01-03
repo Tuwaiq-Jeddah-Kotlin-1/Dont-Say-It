@@ -9,7 +9,7 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/tornpaper_trans"
+        android:background="@drawable/paper_t"
         android:elevation="6sp"
         android:hint="Everything"
         android:paddingStart="20dp"

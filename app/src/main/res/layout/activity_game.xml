@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.game.GameActivity">
     <RelativeLayout
         android:id="@+id/relativetop"
@@ -30,6 +31,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:hint="Round"
+            android:layout_centerInParent="true"
             android:textSize="30dp" />
 
         <ImageButton
