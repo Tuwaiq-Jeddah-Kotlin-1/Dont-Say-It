@@ -40,6 +40,7 @@ class GameAdapter(
         playerWord?.let {
             holder.tvUsername.text = playerWord[0]//username
             holder.tvWord.text = playerWord[1]//word
+            holder.tvWord.setTextColor(Color.BLACK)
             Log.e("$playerName  onBindViewHolder playerMapWord", "$playerMapWord $position")
             Log.e("$playerName  onBindViewHolder playerMapState", "$playerMapState $position")
             if (playerMapState.size > 0 && position < playerMapState.size) {
@@ -56,6 +57,13 @@ class GameAdapter(
                 //should change color too
                 changePlayerState(playerWord[0], playerMapState[position], position, holder)
 
+                if ( holder.redx.visibility==0){//visiable
+                    holder.redx.visibility=View.INVISIBLE
+                }else{
+                    holder.redx.visibility=View.VISIBLE
+                }
+
+
             }
         }
     }
@@ -70,13 +78,16 @@ class GameAdapter(
         if (!playerMapState.contains("winner")) {//this doesn't work if i'm the winner
             if (currentState == "in") {
                 stateRef.child(playerName).setValue("out")
-                holder.tvState.text = "out"//maybe i don't need to change it here but listener will make it change
-                  holder.itemView.setBackgroundColor(Color.GRAY)
+             //   holder.redx.visibility=View.VISIBLE
+               holder.tvState.text = "out"//maybe i don't need to change it here but listener will make it change
+                 // holder.itemView.setBackgroundColor(Color.GRAY)
             }
             if (currentState == "out") {//in case winner or out,  maybe make winner unchangeable
                 stateRef.child(playerName).setValue("in")
+           //     holder.redx.visibility=View.INVISIBLE
+
                 holder.tvState.text = "in"
-                holder.itemView.setBackgroundColor(context.resources.getColor(R.color.white))
+               // holder.itemView.setBackgroundColor(context.resources.getColor(R.color.white))
 
             }
             notifyItemChanged(position)
@@ -92,6 +103,7 @@ class GameAdapter(
         val imgPlayerAnimation: ImageView = itemView.findViewById(R.id.imgPlayerAnimation)
         val tvUsername: TextView = itemView.findViewById(R.id.tvUsername)
         val tvState: TextView = itemView.findViewById(R.id.tvState)
+        val redx: ImageView = itemView.findViewById(R.id.redx)
 
     }
 }

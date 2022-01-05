@@ -2,48 +2,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@color/colorOnPrimary">
 
     <TextView
         android:id="@+id/dialogHeader"
+        style="@style/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/game_details_dialog_header"
-        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="60dp"
         android:background="#959393"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/OutlinedRoundedBox"
         android:id="@+id/keywordlayout"
+        style="@style/OutlinedRoundedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/btnCancel"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/keyword"
             android:layout_width="287dp"
+            style="@style/text18"
+
             android:layout_height="wrap_content"
             android:hint="@string/lobby_keyword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-  <!--  <LinearLayout
+    <!--  <LinearLayout
         android:id="@+id/linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,14 +99,14 @@
         android:text="@string/create_lobby_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnCancel"
-        />
+        app:layout_constraintStart_toEndOf="@id/btnCancel" />
     <!--
         app:layout_constraintTop_toBottomOf="guideline2"
     -->
 
 
     <TextView
+        style="@style/constBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/join_lobby_btn"
@@ -119,13 +125,13 @@
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnCreate"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
     <!--
         app:layout_constraintTop_toBottomOf="guideline2"
     -->
 
     <TextView
+        style="@style/constBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"

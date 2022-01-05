@@ -1,6 +1,5 @@
 package com.shahad.dontsayit.ui.game
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -118,7 +117,7 @@ class GameActivity : AppCompatActivity() {
                 btnStart.background =
                     ContextCompat.getDrawable(this, R.drawable.play_button)
 
-            }else{
+            } else {
                 assignWord()
                 addRoomEventListener()
             }
@@ -139,9 +138,9 @@ class GameActivity : AppCompatActivity() {
 
     private fun roundNumberObserver() {
         viewModel.getRound(roundRef).observe(this, {
-            if (it.toInt()==0) {
+            if (it.toInt() == 0) {
                 tvRoundTitle.text = "Round"
-            }else{
+            } else {
                 tvRoundTitle.text = "${it.toInt()}"
 
             }
@@ -149,7 +148,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun scoreDialog() {
-        dialog = Dialog(this)
+        val dialog = Dialog(this)
         dialog.setContentView(R.layout.score_dialog)
         val recyclerviewScore: RecyclerView = dialog.findViewById(R.id.recyclerviewScore)
         recyclerviewScore.layoutManager = LinearLayoutManager(this)
@@ -215,10 +214,14 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun endOfRoundDialog(winner: String) {
-        val endOfRoundDialog = AlertDialog.Builder(this)
-        endOfRoundDialog.setTitle("$winner Won!")
-        endOfRoundDialog.setMessage("better luck next round!")
-        endOfRoundDialog.show()
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.winner_dialog)
+        val title: TextView = dialog.findViewById(R.id.tvwinner)
+        val message: TextView = dialog.findViewById(R.id.tvmessage)
+        //  val endOfRoundDialog = AlertDialog.Builder(this)
+        title.text = "$winner Won!"
+        message.text = "better luck next round!"
+        dialog.show()
         btnStart.isEnabled = true
         btnStart.background =
             ContextCompat.getDrawable(this, R.drawable.play_button)
@@ -648,16 +651,19 @@ class GameActivity : AppCompatActivity() {
         })
     }
 
- private fun addPicEventListener() {
+    private fun addPicEventListener() {
         profilePicListener = picRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-             if (playerName!=snapshot.key) {
-                 Log.e("$playerName add pic for ${snapshot.key}","with value of ${snapshot.value}")
-                 playersPicListWithoutCurrentPlayer.add(
-                     playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()),
-                     snapshot.value.toString()
-                 )
-             }
+                if (playerName != snapshot.key) {
+                    Log.e(
+                        "$playerName add pic for ${snapshot.key}",
+                        "with value of ${snapshot.value}"
+                    )
+                    playersPicListWithoutCurrentPlayer.add(
+                        playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()),
+                        snapshot.value.toString()
+                    )
+                }
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -733,8 +739,8 @@ class GameActivity : AppCompatActivity() {
             Log.i("onDestroy Game", "stateRef isInitialized")
 
         }
-    if (this::picRef.isInitialized) {
-        picRef.removeEventListener(profilePicListener)
+        if (this::picRef.isInitialized) {
+            picRef.removeEventListener(profilePicListener)
             Log.i("onDestroy Game", "picRef isInitialized")
 
         }

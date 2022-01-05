@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/tvPlayersnumber"
         android:hint="1."
-        android:textSize="20dp"
+        style="@style/text18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
     <TextView
         android:id="@+id/tvPlayerName"
         android:hint="Name"
-        android:textSize="20dp"
+        style="@style/text18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/tvPlayersnumber"
@@ -29,7 +29,7 @@
     <TextView
         android:id="@+id/tvScore"
         android:hint="0"
-        android:textSize="20dp"
+        style="@style/text18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

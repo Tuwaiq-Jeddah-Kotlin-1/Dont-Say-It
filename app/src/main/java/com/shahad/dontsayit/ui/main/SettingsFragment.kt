@@ -15,6 +15,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -166,25 +167,30 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
         }
         engLang.setOnClickListener {//save in preference and start app with it, get words with it
             sharedPreferences.edit().putString(LANG, "en").apply()
-            setLocale(requireActivity(), "en")
+            setLocale( "en")
         }
         arLang.setOnClickListener {
             sharedPreferences.edit().putString(LANG, "ar").apply()
-            setLocale(requireActivity(), "ar")
+            setLocale( "ar")
         }
         toggleDark.setOnClickListener {
             sharedPreferences.edit().putBoolean(DARK_THEME, true).apply()
             //  Toast.makeText(requireContext(),"isChecked SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
+           // resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_YES
 
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
             //startActivity(Intent(requireContext(), SplashActivity::class.java))
+           // recreate(context as Activity)
+
         }
 
         toggleLight.setOnClickListener {
             sharedPreferences.edit().putBoolean(DARK_THEME, false).apply()
             //  Toast.makeText(requireContext(),"else isChecked SettingsFragment MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
+          //  resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_NO
+           AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+           // recreate(context as Activity)
 
-            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
        /* switchTheme.setOnCheckedChangeListener { _, isChecked ->//save in preference and start app with it
             *//*if (isChecked) {
@@ -262,15 +268,19 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
 
     }
 
-    private fun setLocale(activity: Activity, languageCode: String) {
-        val locale = Locale(languageCode)
+
+
+    private fun setLocale(localeName: String) {
+        val locale = Locale(localeName)
         Locale.setDefault(locale)
-        val resources = activity.resources
-        val config: Configuration = resources.configuration
+        val resources = activity?.resources
+        val config: Configuration = resources!!.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
-        startActivity(Intent(requireContext(), MainActivity::class.java))
-        activity.finish();
+        /* startActivity(Intent(requireContext(), MainActivity::class.java))
+         activity.finish();*/
+        recreate(context as Activity)
+
     }
 
    /* override fun onItemClick(item: String?) {

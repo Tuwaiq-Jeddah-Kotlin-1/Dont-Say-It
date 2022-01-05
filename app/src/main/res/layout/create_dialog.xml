@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/colorOnPrimary"
     android:layout_gravity="center">
 
     <TextView
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/game_details_dialog_header"
-        android:textSize="30sp"
+        style="@style/dialogTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,6 +38,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/keyword"
             android:layout_width="150dp"
+            style="@style/text18"
+
             android:layout_height="wrap_content"
             android:hint="@string/lobby_keyword"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -60,6 +63,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
+            android:fontFamily="@font/tajawal_medium"
             android:text="@string/players"
             android:textSize="16sp" />
 
@@ -102,6 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_lobby_btn"
+        style="@style/constBtn"
         app:layout_constraintBottom_toBottomOf="@+id/btnCreate"
         app:layout_constraintEnd_toEndOf="@+id/btnCreate"
         app:layout_constraintStart_toStartOf="@+id/btnCreate"
@@ -127,6 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
+        style="@style/constBtn"
         app:layout_constraintBottom_toBottomOf="@+id/btnCancel"
         app:layout_constraintEnd_toEndOf="@+id/btnCancel"
         app:layout_constraintStart_toStartOf="@+id/btnCancel"

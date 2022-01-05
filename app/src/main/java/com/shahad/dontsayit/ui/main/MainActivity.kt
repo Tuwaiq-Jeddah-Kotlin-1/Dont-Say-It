@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         /*  val uId = sharedPreferences.getString(UID, null)
         uId?.let { fillShared(it) } */
 
-        if (sharedPreferences.getBoolean(DARK_THEME, false)) {
+      /*  if (sharedPreferences.getBoolean(DARK_THEME, false)) {
             //setTheme(R.style.Theme_DontSayItNight)//.DarkTheme)
             //  Toast.makeText(this,"GameActivity MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
 
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             //Toast.makeText(this,"GameActivity MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
 
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
+        }*/
         if (sharedPreferences.getString(LANG, "en") == "ar") {
             setLocale(this, "ar")
         } else {
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "periodicNotification",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.KEEP,//change to replace so its not every 2 days but every inactive 2 day
             periodicWorker
         ) //unique work
 

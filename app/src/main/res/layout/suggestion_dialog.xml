@@ -1,75 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="20dp">
+    android:background="@color/colorOnPrimary">
 
-<LinearLayout
-    android:layout_width="200dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <TextView
-        android:id="@+id/tvSuggestion"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-
-        android:layout_margin="10dp"
-        android:text="@string/write_us_a_suggestion"
-        android:textAlignment="center" />
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="#959393"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/OutlinedRoundedBox"
-        android:id="@+id/sugglayout"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/etSuggestion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:hint="@string/edit_text_suggestion"
-        android:textAlignment="center"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content">
-
-        <ImageButton
-            android:id="@+id/btnSuggestion"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_green_nobg"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/suggest_btn_send" />
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvSuggestion"
+            style="@style/dialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/btnSuggestion"
-            app:layout_constraintBottom_toBottomOf="@id/btnSuggestion"
-            app:layout_constraintStart_toStartOf="@id/btnSuggestion"
-            app:layout_constraintEnd_toEndOf="@id/btnSuggestion"
-            android:text="@string/suggest_btn_send" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:text="@string/write_us_a_suggestion"
+            android:textAlignment="center" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#959393"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sugglayout"
+            style="@style/OutlinedRoundedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSuggestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                style="@style/text18"
+
+                android:hint="@string/edit_text_suggestion"
+                android:textAlignment="center" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/btnSuggestion"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_green_nobg"
+                android:text="@string/suggest_btn_send"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/constBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/suggest_btn_send"
+                app:layout_constraintBottom_toBottomOf="@id/btnSuggestion"
+                app:layout_constraintEnd_toEndOf="@id/btnSuggestion"
+                app:layout_constraintStart_toStartOf="@id/btnSuggestion"
+                app:layout_constraintTop_toTopOf="@id/btnSuggestion" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

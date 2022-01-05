@@ -44,15 +44,16 @@ class SignupFragment : Fragment() {
         findView(view)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
+        imgprofile.load(sharedPreferences.getString(PIC, "https://firebasestorage.googleapis.com/v0/b/don-t-say-it.appspot.com/o/pic_f.png?alt=media&token=719784e8-9b96-473d-9eb7-5908302cf9d0"))
 
         val args: SignupFragmentArgs? by navArgs()
         args?.let {
          //   imgprofile.load(args?.picUrl)
             chosenPic= args?.picUrl!!
+            imgprofile.load(sharedPreferences.getString(PIC, chosenPic))
         }
 
 
-      imgprofile.load(sharedPreferences.getString(PIC, chosenPic))
 
 if(viewModel.checkConnection(requireContext()) && !this::pictureList.isInitialized){
         viewModel.getProfilePictures().observe(viewLifecycleOwner,{

@@ -4,9 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".ui.main.HomeFragment">
 
-    <TextView
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/title"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnCreateLobby"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_rawRes="@raw/background_tiles" />
+<ImageView
+    android:layout_width="120dp"
+    android:layout_height="90dp"
+    android:layout_marginTop="90dp"
+    android:src="@drawable/shush"
+    android:layout_marginRight="30dp"
+    android:elevation="1dp"
+    app:layout_constraintBottom_toTopOf="@+id/btnCreateLobby"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="@color/colorPrimary"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/title" />
+  <!--  <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,28 +53,26 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageButton
         android:id="@+id/btnCreateLobby"
-        android:layout_width="150dp"
+        android:layout_width="170dp"
         android:layout_height="50dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="0dp"
         android:background="@drawable/btn_blue_nobg"
         android:text="@string/create_lobby_btn"
         app:layout_constraintBottom_toTopOf="@+id/btnJoinLobby"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
         android:id="@+id/textView2"
+        style="@style/constBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_lobby_btn"
-        android:textSize="16dp"
-        android:textColor="@color/constBtn"
         app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
         app:layout_constraintEnd_toEndOf="@+id/btnCreateLobby"
         app:layout_constraintStart_toStartOf="@+id/btnCreateLobby"
@@ -52,6 +84,7 @@
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/ic_keyboard_arrow_right"
+        android:backgroundTint="#424242"
         app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
         app:layout_constraintEnd_toEndOf="@+id/btnCreateLobby"
         app:layout_constraintStart_toEndOf="@+id/textView2"
@@ -59,22 +92,22 @@
 
     <ImageButton
         android:id="@+id/btnJoinLobby"
-        android:layout_width="150dp"
+        android:layout_width="170dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:text="@string/join_lobby_btn"
         android:background="@drawable/btn_kaki_nobg"
+        android:text="@string/join_lobby_btn"
         app:layout_constraintBottom_toTopOf="@+id/btnHow"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCreateLobby" />
+
     <TextView
         android:id="@+id/textView3"
+        style="@style/constBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/join_lobby_btn"
-        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/btnJoinLobby"
         app:layout_constraintEnd_toEndOf="@+id/btnJoinLobby"
         app:layout_constraintStart_toStartOf="@+id/btnJoinLobby"
@@ -86,28 +119,30 @@
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/ic_keyboard_arrow_right"
+        android:backgroundTint="#424242"
         app:layout_constraintBottom_toBottomOf="@+id/btnJoinLobby"
         app:layout_constraintEnd_toEndOf="@+id/btnJoinLobby"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toTopOf="@+id/btnJoinLobby" />
+
     <ImageButton
         android:id="@+id/btnHow"
-        android:layout_width="150dp"
+        android:layout_width="170dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:text="@string/how_to_play"
         android:background="@drawable/btn_green_nobg"
+        android:text="@string/how_to_play"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnJoinLobby" />
-   <TextView
+
+    <TextView
         android:id="@+id/textView4"
+        style="@style/constBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/how_to_play"
-        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/btnHow"
         app:layout_constraintEnd_toEndOf="@+id/btnHow"
         app:layout_constraintStart_toStartOf="@+id/btnHow"
@@ -119,6 +154,7 @@
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/ic_keyboard_arrow_right"
+        android:backgroundTint="#424242"
         app:layout_constraintBottom_toBottomOf="@+id/btnHow"
         app:layout_constraintEnd_toEndOf="@+id/btnHow"
         app:layout_constraintStart_toEndOf="@+id/textView4"
