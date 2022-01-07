@@ -6,13 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.shahad.dontsayit.R
+import com.shahad.dontsayit.databinding.RecyclerviewWordsItemBinding
 
 class GameAdapter(
     private val playerMapWord: MutableMap<Int, MutableList<String>>,
@@ -28,16 +27,22 @@ class GameAdapter(
     private val stateRef: DatabaseReference = database.getReference("rooms/$roomName/state")
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAdapter {
-        val view =
+        /*val view =
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.recyclerview_words_item, parent, false)
-        return ItemAdapter(view)
+        return ItemAdapter(view)*/
+
+        val bind:RecyclerviewWordsItemBinding=RecyclerviewWordsItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+   return ItemAdapter(bind)
     }
 
     override fun onBindViewHolder(holder: ItemAdapter, position: Int) {
         val playerWord = playerMapWord[position]
 
-        playerWord?.let {
+        holder.bind(playerWord,position)
+
+
+     /*   playerWord?.let {
             holder.tvUsername.text = playerWord[0]//username
             holder.tvWord.text = playerWord[1]//word
             holder.tvWord.setTextColor(Color.BLACK)
@@ -49,9 +54,9 @@ class GameAdapter(
                 holder.imgPlayerAnimation.load(playerPic[position])//pic
 
             }
-            /* if (playerName == playerWord[0]) {
+            *//* if (playerName == playerWord[0]) {
                  holder.itemView.visibility = View.GONE
-             }*/
+             }*//*
 
             holder.itemView.setOnClickListener {//change state
                 //should change color too
@@ -65,14 +70,14 @@ class GameAdapter(
 
 
             }
-        }
+        }*/
     }
 
     private fun changePlayerState(
         playerName: String,
         currentState: String,
         position: Int,
-        holder: ItemAdapter
+        holder: RecyclerviewWordsItemBinding
     ) {
         //listOfInPlayers.size>1&&
         if (!playerMapState.contains("winner")) {//this doesn't work if i'm the winner
@@ -98,12 +103,53 @@ class GameAdapter(
         return playerMapWord.size
     }
 
-    inner class ItemAdapter(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvWord: TextView = itemView.findViewById(R.id.tvWord)
-        val imgPlayerAnimation: ImageView = itemView.findViewById(R.id.imgPlayerAnimation)
-        val tvUsername: TextView = itemView.findViewById(R.id.tvUsername)
-        val tvState: TextView = itemView.findViewById(R.id.tvState)
-        val redx: ImageView = itemView.findViewById(R.id.redx)
+    inner class ItemAdapter(val itemBinding: RecyclerviewWordsItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+        fun bind(playerWord: MutableList<String>?, position: Int) {
+            playerWord?.let {
+                itemBinding.tvUsername.text = playerWord[0]//username
+                itemBinding.tvWord.text = playerWord[1]//word
+                itemBinding.tvWord.setTextColor(Color.BLACK)
+                Log.e("$playerName  onBindViewHolder playerMapWord", "$playerMapWord $position")
+                Log.e("$playerName  onBindViewHolder playerMapState", "$playerMapState $position")
+                if (playerMapState.size > 0 && position < playerMapState.size) {
+                    itemBinding.tvState.text = playerMapState[position]//state
+                    if (playerMapState[position]=="out"){
+                        itemBinding.redx.visibility=View.VISIBLE
+
+                    }else{
+                        itemBinding.redx.visibility=View.INVISIBLE
+
+                    }
+
+
+                    Log.e("$playerName Game adapter",playerPic.toString())
+                    itemBinding.imgPlayerAnimation.load(playerPic[position])//pic
+
+                }
+                /* if (playerName == playerWord[0]) {
+                     holder.itemView.visibility = View.GONE
+                 }*/
+itemBinding.imgPlayerAnimation.setOnClickListener {
+
+               // holder.itemView.setOnClickListener {//change state
+                    //should change color too
+                    changePlayerState(playerWord[0], playerMapState[position], position, itemBinding)
+
+                    if ( itemBinding.redx.visibility==0){//visiable
+                        itemBinding.redx.visibility=View.INVISIBLE
+                    }else{
+                        itemBinding.redx.visibility=View.VISIBLE
+                    }
+
+
+                }
+            }
+        }
+        /* val tvWord: TextView = itemBinding.findViewById(R.id.tvWord)
+         val imgPlayerAnimation: ImageView = itemBinding.findViewById(R.id.imgPlayerAnimation)
+         val tvUsername: TextView = itemBinding.findViewById(R.id.tvUsername)
+         val tvState: TextView = itemBinding.findViewById(R.id.tvState)
+         val redx: ImageView = itemBinding.findViewById(R.id.redx)*/
 
     }
 }

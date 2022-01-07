@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".ui.login.SignupFragment">
+    tools:context=".ui.login.SignupFragment"
+    tools:viewBindingIgnore="true">
     <!-- <TextView
         android:id="@+id/signupTitle"
         android:text="@string/title_sign_up"

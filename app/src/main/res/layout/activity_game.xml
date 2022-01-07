@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".ui.game.GameActivity">
+    tools:context=".ui.game.GameActivity"
+    tools:viewBindingIgnore="true">
     <RelativeLayout
         android:id="@+id/relativetop"
         app:layout_constraintTop_toTopOf="parent"

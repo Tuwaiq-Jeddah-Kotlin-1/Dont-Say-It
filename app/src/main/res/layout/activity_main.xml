@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:id="@+id/container"
     android:background="@color/colorPrimary"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.main.MainActivity"
+    tools:viewBindingIgnore="true">
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navHost"
 

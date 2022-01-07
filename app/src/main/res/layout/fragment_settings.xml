@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
    android:id="@+id/settingsLayout"
     android:background="@color/colorPrimary"
-    tools:context=".ui.main.SettingsFragment">
+    tools:context=".ui.main.SettingsFragment"
+    tools:viewBindingIgnore="true">
 <LinearLayout
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="@+id/view1"
