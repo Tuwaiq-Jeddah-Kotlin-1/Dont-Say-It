@@ -55,10 +55,6 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
     private lateinit var shake: Animation
     private lateinit var scaleDown: Animation
 
-    //
-    //private lateinit var bottomSheet: ConstraintLayout
-   // private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,29 +65,24 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         findView(view)
-        //recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)//
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
         username = sharedPreferences.getString(USERNAME, "") ?: ""
         tvEmail.text = sharedPreferences.getString(EMAIL, "")
-        //Toast.makeText(requireContext(),"loading pic",Toast.LENGTH_SHORT).show()
-        imgprofile.load(sharedPreferences.getString(PIC, ""))
+
+    imgprofile.load(sharedPreferences.getString(PIC, null))
+
+
 
         etUsername.setText(username)
         etUsername.isEnabled = false
-       // pictureList= mutableListOf(ProfilePicture("1","https://kucasino.net/wp-content/uploads/mc-mai-ngoc.png"), ProfilePicture("2","https://we25.vn/media/images/o-anhvong3%20(4).jpg"),ProfilePicture("3","https://ttol.vietnamnetjsc.vn/images/2018/12/08/09/41/hotgirl-3.jpg"),)
         if (sharedPreferences.getBoolean(DARK_THEME, false)) {//if dark theme is true flip the switch
-            //  Toast.makeText(requireContext(),"SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
-
             toggleDark.isChecked = true
         }else{
             toggleLight.isChecked = true
-
         }
     if (sharedPreferences.getString (LANG,"en")=="en") {//if dark theme is true flip the switch
-            //  Toast.makeText(requireContext(),"SettingsFragment MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
-
             engLang.isChecked = true
         }else{
         arLang.isChecked = true
@@ -103,43 +94,10 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
             pictureList=it.toTypedArray()
             Toast.makeText(requireContext(),"done observe",Toast.LENGTH_SHORT).show()
         })}
-        //
-        /*bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-*/
-/*                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.white))
-                view.background = resources.getDrawable(R.drawable.background)
-                refreshView(view.context)
-                addButton.visibility = View.VISIBLE
-            }
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.white))
-                view.background = resources.getDrawable(R.drawable.background)
-                refreshView(view.context)
-                addButton.visibility = View.VISIBLE
-
-            }
-            if (newState == BottomSheetBehavior.STATE_EXPANDED || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-                addButton.visibility = View.GONE
-            }
-        *//*
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                //  transitionBottomSheetParentView(slideOffset, view)
-            }
-        })*/
-        //
 
         btnEditUsername.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 btnEditUsername.startAnimation(shake)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
                 etUsername.isEnabled = !etUsername.isEnabled
@@ -226,15 +184,11 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
                     )
                 findNavController().navigate(action)
             }
-         //   bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-           // recyclerview.adapter = PictureAdapter(pictureList,bottomSheetBehavior,this)
-
         }
 
         imgbtnSignOut.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 imgbtnSignOut.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
                 sharedPreferences.edit().clear().apply()
@@ -257,12 +211,6 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
         imgbtnprofile = view.findViewById(R.id.imgbtnprofile)
         imgprofile = view.findViewById(R.id.imgprofile)
         back = view.findViewById(R.id.back)
-        //bottomSheet=view.findViewById(R.id.settingsLayout)//
-      //  recyclerview= view.findViewById(R.id.recyclerviewprofile)//
-       /* bottomSheet = view.findViewById(R.id.main_bottom_sheet)
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN*/
-
         shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
         scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
 
@@ -282,15 +230,6 @@ class SettingsFragment : Fragment(){//}, PictureAdapter.ItemListener {
         recreate(context as Activity)
 
     }
-
-   /* override fun onItemClick(item: String?) {
-       // Snackbar.make(coordinatorLayout!!, "$item is selected", Snackbar.LENGTH_LONG).setAction("Action", null).show()
-        item?.let{
-        imgprofile.load(it)
-       // bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-    }*/
-
 
 
 

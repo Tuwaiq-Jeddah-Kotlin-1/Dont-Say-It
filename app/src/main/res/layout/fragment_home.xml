@@ -133,7 +133,6 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/btn_green_nobg"
         android:text="@string/how_to_play"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnJoinLobby" />
@@ -161,15 +160,15 @@
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/btnHow" />
 
-    <LinearLayout
+  <!--  <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@+id/imgbtnsuggest"
         app:layout_constraintTop_toBottomOf="@+id/btnHow">
-
-        <ImageButton
+-->
+       <!-- <ImageButton
             android:id="@+id/imgBtnShare"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -180,26 +179,28 @@
             app:layout_constraintEnd_toStartOf="@id/imgBtnSettings"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnHow" />
-
+-->
         <ImageButton
             android:id="@+id/imgBtnSettings"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/settings_gear"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imgBtnShare"
-            app:layout_constraintTop_toBottomOf="@+id/btnHow" />
-    </LinearLayout>
+
+            android:layout_margin="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+             />
+   <!-- </LinearLayout>-->
 
     <ImageButton
         android:id="@+id/imgbtnsuggest"
+        android:background="@drawable/review"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="20dp"
-        android:background="@drawable/review"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

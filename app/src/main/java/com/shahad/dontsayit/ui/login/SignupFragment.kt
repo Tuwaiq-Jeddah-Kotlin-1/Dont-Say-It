@@ -16,9 +16,6 @@ import coil.load
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.network.ViewModel
-import com.shahad.dontsayit.ui.BottomSheetProfilePicturesArgs
-import com.shahad.dontsayit.ui.PictureAdapter
-import com.shahad.dontsayit.ui.main.SettingsFragmentDirections
 import java.util.*
 
 class SignupFragment : Fragment() {
@@ -32,38 +29,45 @@ class SignupFragment : Fragment() {
     private lateinit var imgprofile: ImageView
     private lateinit var imgbtnprofile: TextView
     private lateinit var pictureList: Array<ProfilePicture>//
-    private  var chosenPic: String="https://firebasestorage.googleapis.com/v0/b/don-t-say-it.appspot.com/o/pic_f.png?alt=media&token=719784e8-9b96-473d-9eb7-5908302cf9d0"//default pic
+    private var chosenPic: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_signup, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         findView(view)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-        imgprofile.load(sharedPreferences.getString(PIC, "https://firebasestorage.googleapis.com/v0/b/don-t-say-it.appspot.com/o/pic_f.png?alt=media&token=719784e8-9b96-473d-9eb7-5908302cf9d0"))
 
         val args: SignupFragmentArgs? by navArgs()
         args?.let {
-         //   imgprofile.load(args?.picUrl)
-            chosenPic= args?.picUrl!!
-            imgprofile.load(sharedPreferences.getString(PIC, chosenPic))
+           if (args?.picUrl!="null") {
+               chosenPic = args?.picUrl
+               imgprofile.load(chosenPic)
+           }
         }
 
 
 
-if(viewModel.checkConnection(requireContext()) && !this::pictureList.isInitialized){
-        viewModel.getProfilePictures().observe(viewLifecycleOwner,{
-            Toast.makeText(requireContext(),"observe",Toast.LENGTH_SHORT).show()
-            pictureList=it.toTypedArray()
-            Toast.makeText(requireContext(),"done observe",Toast.LENGTH_SHORT).show()
-        })}else{
-    Toast.makeText(requireContext(), "No Internet Connect Can't load profile pictures", Toast.LENGTH_SHORT).show()
+        if (viewModel.checkConnection(requireContext()) && !this::pictureList.isInitialized) {
+            viewModel.getProfilePictures().observe(viewLifecycleOwner, {
+                Toast.makeText(requireContext(), "observe", Toast.LENGTH_SHORT).show()
+                pictureList = it.toTypedArray()
+                Toast.makeText(requireContext(), "done observe", Toast.LENGTH_SHORT).show()
+            })
+        }
+        else {
+            Toast.makeText(
+                requireContext(),
+                "No Internet Connect Can't load profile pictures",
+                Toast.LENGTH_SHORT
+            ).show()
 
-}
+        }
         imgbtnprofile.setOnClickListener {
             if (this::pictureList.isInitialized) {
                 val action =
@@ -76,24 +80,25 @@ if(viewModel.checkConnection(requireContext()) && !this::pictureList.isInitializ
         btnSignup.setOnClickListener {
             if (viewModel.checkConnection(requireContext())) {
                 if (validate()) {
-                    viewModel.signUp(chosenPic,
-                        etEmail.text.toString().trim().lowercase(Locale.getDefault()),
-                        etPassword.text.toString().trim(),
-                        etUsername.text.toString().trim(), findNavController()
-                    )
-                    /*  if (emailPref != null ) {
-                            Toast.makeText(view.context, emailPref, Toast.LENGTH_LONG).show()
+                    if (chosenPic!=null) {
 
-                            findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
-                            }*/
+                        viewModel.signUp(
+                            chosenPic!!,
+                            etEmail.text.toString().trim().lowercase(Locale.getDefault()),
+                            etPassword.text.toString().trim(),
+                            etUsername.text.toString().trim(), findNavController()
+                        )
+                    }else{
+                        Toast.makeText(requireContext(),"choose a profile picture",Toast.LENGTH_SHORT).show()
+                    }
+
                 }
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
 
             }
         }
         btnLogin.setOnClickListener {
-            Log.i("Register: ", "nav to login")
             findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
 
         }

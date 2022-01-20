@@ -1,9 +1,8 @@
 package com.shahad.dontsayit.ui.main
 
 import android.app.Dialog
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,10 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.NumberPicker
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -28,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import java.util.*
 
 class HomeFragment : Fragment() {
     private lateinit var btnCreateLobby: ImageButton
@@ -42,7 +39,7 @@ class HomeFragment : Fragment() {
     private lateinit var shake: Animation
     private lateinit var scaleUp: Animation
     private lateinit var scaleDown: Animation
-
+    private val clipboard: ClipboardManager by lazy { requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager }
     private var playerName = ""
     private var profilePic = ""
     private var roomName = ""
@@ -74,11 +71,9 @@ class HomeFragment : Fragment() {
 
         roomsRef = database.getReference("rooms")
 
-
         btnCreateLobby.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 btnCreateLobby.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
 
@@ -94,7 +89,6 @@ class HomeFragment : Fragment() {
         btnJoinLobby.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 btnJoinLobby.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
                 if (viewModel.checkConnection(requireContext())) {
@@ -105,17 +99,14 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
         btnHow.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 btnHow.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
                 findNavController().navigate(R.id.action_homeFragment_to_howToPlayFragment)
 
             }
         }
-
         imgbtnsuggest.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 imgbtnsuggest.startAnimation(scaleDown)
@@ -130,28 +121,25 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
         imgBtnSettings.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 imgBtnSettings.startAnimation(scaleUp)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
-
                 findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
             }
         }
-        imgBtnShare.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
-                imgBtnShare.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
-                delay(100)
+        /* imgBtnShare.setOnClickListener {
+             GlobalScope.async(Dispatchers.Main) {
+                 imgBtnShare.startAnimation(scaleDown)
+                 // btnCreateLobby.startAnimation(bounce)
+                 delay(100)
 
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.putExtra(Intent.EXTRA_TEXT, appUrl)//change to url
-                intent.type = "text/plain"
-                startActivity(intent)
-            }
-        }
+                 val intent = Intent(Intent.ACTION_SEND)
+                 intent.putExtra(Intent.EXTRA_TEXT, appUrl)//change to url
+                 intent.type = "text/plain"
+                 startActivity(intent)
+             }
+         }*/
         addRoomsEventListener()
     }
 
@@ -168,11 +156,12 @@ class HomeFragment : Fragment() {
                 delay(100)
 
                 if (etSuggest.text.toString().isNotEmpty()) {
-                saveToAPI(etSuggest.text.toString())
-                dialog.dismiss()
+                    saveToAPI(etSuggest.text.toString())
+                    dialog.dismiss()
 
+                }
             }
-        }}
+        }
 
         dialog.show()
 
@@ -192,7 +181,7 @@ class HomeFragment : Fragment() {
         btnCreateLobby = view.findViewById(R.id.btnCreateLobby)
         btnJoinLobby = view.findViewById(R.id.btnJoinLobby)
         btnHow = view.findViewById(R.id.btnHow)
-        imgBtnShare = view.findViewById(R.id.imgBtnShare)
+//        imgBtnShare = view.findViewById(R.id.imgBtnShare)
         imgBtnSettings = view.findViewById(R.id.imgBtnSettings)
         imgbtnsuggest = view.findViewById(R.id.imgbtnsuggest)
         shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
@@ -242,10 +231,12 @@ class HomeFragment : Fragment() {
 
         val dialog = Dialog(requireContext())
         dialog.setContentView(R.layout.create_dialog)
-        var edKeyword: EditText = dialog.findViewById(R.id.keyword)
-        var btnCreate: ImageButton = dialog.findViewById(R.id.btnCreate)
-        var btnCancel: ImageButton = dialog.findViewById(R.id.btnCancel)
+        var tvKeyword: TextView = dialog.findViewById(R.id.keyword)
+        var btncopy: ImageButton = dialog.findViewById(R.id.btnCopy)
+        var btnshare: ImageButton = dialog.findViewById(R.id.imgBtnShare)
+        var btnCreate: ImageButton = dialog.findViewById(R.id.btnJoin)
         var numPick: NumberPicker = dialog.findViewById(R.id.numberPicker)
+        tvKeyword.text = UUID.randomUUID().toString()
         numPick.maxValue = 6;
         numPick.minValue = 2;
         numPick.wrapSelectorWheel = false;
@@ -256,39 +247,18 @@ class HomeFragment : Fragment() {
         btnCreate.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 btnCreate.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
                 roomCreateJoin = true
-            if (edKeyword.text.toString() != "") {
-                //  btnCreateLobby.text = getString(R.string.create_lobby_btn)
+
                 btnCreateLobby.isEnabled = false
-                roomName = edKeyword.text.toString()
+                roomName = tvKeyword.text.toString()
 
                 if (!roomsList.contains(roomName)) {
                     addPlayer()
-                    /* //add player
-                roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
-                roomRef.setValue("$playerName word?")*/
-
-
-                    /* //add player state
-                 roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
-                 roomRef.setValue("in")
- */
-
                     setPlayersNum(chosen)
-                    /*//minus one player
-                roomsRef.child(roomName).child("playersNum").setValue((chosen) - 1)
-                host = playerName*/
-
                     setHost()
                     setRound()
-                    /*//add host name
-                roomRef = database.getReference("rooms/${roomName}/host")
-                roomRef.setValue(playerName)*/
-
-
                     dialog.dismiss()
                     addRoomEventListener()
                 } else {
@@ -301,16 +271,25 @@ class HomeFragment : Fragment() {
 
                 }
             }
-        }}
-        btnCancel.setOnClickListener {
+        }
+        btncopy.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
-                btnCancel.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
+                btncopy.startAnimation(scaleDown)
                 delay(100)
 
-                edKeyword.text.clear()
-                chosen = 2
-                dialog.dismiss()
+                val clip: ClipData = ClipData.newPlainText("Room password", tvKeyword.text)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(requireContext(), "Password Copied", Toast.LENGTH_SHORT).show();
+            }
+        }
+        btnshare.setOnClickListener {
+            GlobalScope.async(Dispatchers.Main) {
+                btnshare.startAnimation(scaleDown)
+                delay(100)
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT, tvKeyword.text)
+                intent.type = "text/plain"
+                startActivity(intent)
             }
         }
 
@@ -323,10 +302,9 @@ class HomeFragment : Fragment() {
         dialog.setContentView(R.layout.join_dialog)
 
         var edKeyword: EditText = dialog.findViewById(R.id.keyword)
-        var btnJoin: ImageButton = dialog.findViewById(R.id.btnCreate)
-        var btnCancel: ImageButton = dialog.findViewById(R.id.btnCancel)
+        var btnJoin: ImageButton = dialog.findViewById(R.id.btnJoin)
+        var btnPaste: ImageButton = dialog.findViewById(R.id.btnPaste)
 
-        //  btnJoin.text = getString(R.string.join_lobby_btn)
         btnJoin.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
                 btnJoin.startAnimation(scaleDown)
@@ -349,14 +327,16 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        btnCancel.setOnClickListener {
+        btnPaste.setOnClickListener {
             GlobalScope.async(Dispatchers.Main) {
-                btnCancel.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
+                btnPaste.startAnimation(scaleDown)
                 delay(100)
+                val clipData: ClipData? = clipboard.primaryClip
 
-                edKeyword.text.clear()
-                dialog.dismiss()
+                clipData?.apply {
+                    val textToPaste: String = this.getItemAt(0).text.toString().trim()
+                    edKeyword.setText(textToPaste)
+                }
             }
 
         }
@@ -367,36 +347,16 @@ class HomeFragment : Fragment() {
 
     private fun checkPlayersNum(dialog: Dialog) {
         roomRef = database.getReference("rooms/${roomName}/playersNum")
-
         roomRef.get().addOnCompleteListener {
             it.addOnSuccessListener { num ->
-                //  Log.i("players number ", num.value.toString())
                 if (num.value != null) {
                     if (num.value.toString().toInt() - 1 >= 0) {//change value and let player in
-
-
                         addPlayer()
-                        /*//add player
-                        roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
-                        roomRef.setValue("$playerName word?")//can set this to random word from api?*/
-/*
-
-                    //add state
-                    roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
-                    roomRef.setValue("in")//can set this to random word from api?
-*/
-
                         reducePlayersNum(num)
-                        /*//player minus one
-                        roomRef = database.getReference("rooms/${roomName}/playersNum")
-                        roomRef.setValue(num.value.toString().toInt() - 1)*/
                         dialog.dismiss()
-
                         addRoomEventListener()
-                        // Log.i("players number IF", "YOU'RE IN")
 
                     } else {
-                        //   Log.i("players number ELSE ROOM FULL", num.value.toString())
                         Toast.makeText(requireContext(), "this room is full", Toast.LENGTH_LONG)
                             .show()
                         btnJoinLobby.isEnabled = true
@@ -410,15 +370,15 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i("onStop", "removingListeners")
+        Log.i("onDestroy", "removingListeners")
         if (this::roomRef.isInitialized) {
             roomRef.removeEventListener(roomListener)
-            Log.i("onStop", "roomRef isInitialized")
+            Log.i("onDestroy", "roomRef isInitialized")
 
         }
         if (this::roomsRef.isInitialized) {
             roomsRef.removeEventListener(roomsListener)
-            Log.i("onStop", "roomsRef isInitialized")
+            Log.i("onDestroy", "roomsRef isInitialized")
 
         }
     }
@@ -427,12 +387,10 @@ class HomeFragment : Fragment() {
 
         roomListener = roomRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.i("addRoomEventListener", "roomListener")
 
                 if (roomCreateJoin) {// if true then the change is  creating/joining room
 
                     //join the room
-                    /* btnCreateLobby.text = getString(R.string.create_lobby_btn)*/
                     btnCreateLobby.isEnabled = true
                     btnJoinLobby.isEnabled = true
 
@@ -446,7 +404,6 @@ class HomeFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {
                 //error
-                /* btnCreateLobby.text = getString(R.string.create_lobby_btn)*/
                 btnCreateLobby.isEnabled = true
                 btnJoinLobby.isEnabled = true
                 Toast.makeText(requireContext(), "Error!", Toast.LENGTH_SHORT).show()
@@ -456,10 +413,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun addRoomsEventListener() {
-        // roomsRef = database.getReference("rooms")
         roomsListener = roomsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.i("addRoomsEventListener", "roomsListener")
 
                 //show list of rooms
                 roomsList.clear()
@@ -467,16 +422,7 @@ class HomeFragment : Fragment() {
                 for (room in rooms) {
                     roomsList.add(room.key!!)
 
-                    /*   val adapter: ArrayAdapter<String> = ArrayAdapter(
-                           requireContext(),
-                           android.R.layout.simple_list_item_1,
-                           roomsList
-                       )
-                       listview.adapter = adapter*/
-
-
                 }
-                //  Log.i("ROOMS data change", "$playerName: $roomDeletedFlag")
 
             }
 
@@ -486,7 +432,6 @@ class HomeFragment : Fragment() {
 
         })
     }
-
 
     private fun saveToAPI(value: String) {
         val suggestions = UserSuggestions()

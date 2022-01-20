@@ -20,7 +20,7 @@
         android:id="@+id/imgPic"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_person"
+        android:src="@drawable/user"
         android:padding="7dp"
         android:layout_marginVertical="10dp"
         app:layout_constraintStart_toStartOf="parent"

@@ -14,9 +14,12 @@ import com.google.firebase.database.DatabaseReference
 import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.model.Word
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ViewModel(context: Application) : AndroidViewModel(context) {
+
 
     private val repo = Repo(context)
 
@@ -81,19 +84,18 @@ fun getProfilePictures(): LiveData<List<ProfilePicture>> {
     fun getScore(playerScoreRef: DatabaseReference): MutableLiveData<Long> {
         val score = MutableLiveData<Long>()
         playerScoreRef.get().addOnSuccessListener {
-            Log.i("getScore 1  :", it.value.toString())
+
             score.postValue(it.value as Long)//java.lang.NullPointerException: null cannot be cast to non-null type kotlin.Long
 
-            Log.i("getScore 2  :", it.value.toString())
+            Log.i("getScore ", it.value.toString())
         }
         return score
     }
     fun getRound(roomRef: DatabaseReference): MutableLiveData<Long> {
         val round = MutableLiveData<Long>()
         roomRef.get().addOnSuccessListener {
-                  Log.i("getScore 1  :",it.value.toString())
             round.postValue(it.value as Long)
-            //      Log.i("getScore 2  :",it.value.toString())
+            Log.i("getRound",it.value.toString())
         }
         return round
     }
@@ -106,13 +108,14 @@ fun getProfilePictures(): LiveData<List<ProfilePicture>> {
             else -> false
         }
     }
-    fun resetState(stateRef: DatabaseReference, playersList: List<String>): MutableLiveData<Any> {
+    fun resetState(stateRef: DatabaseReference, playersList: MutableSet<String>): MutableLiveData<Any> {
         val newState = mutableMapOf<String, String>()
         val stateList = MutableLiveData<Any>()
 
         playersList.forEach { newState[it] = "in" }
-        stateRef.updateChildren(newState as Map<String, Any>)
+        stateRef.updateChildren(newState as Map<String, String>)
         stateRef.get().addOnSuccessListener {
+            Log.e("resetState","${it.value}")
             stateList.postValue(it.value)
         }
         return stateList

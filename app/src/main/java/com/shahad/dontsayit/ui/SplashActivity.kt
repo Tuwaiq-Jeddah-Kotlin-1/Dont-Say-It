@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import com.shahad.dontsayit.DARK_THEME
+import com.shahad.dontsayit.LANG
 import com.shahad.dontsayit.PREFERENCE
 import com.shahad.dontsayit.R
 import com.shahad.dontsayit.ui.main.MainActivity
@@ -35,30 +36,33 @@ class SplashActivity : AppCompatActivity() {
         logo = findViewById(R.id.logo)
         //get theme and lang from shared preference
         sharedPreferences = this.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
+
+        if (sharedPreferences.getString(LANG, "en") == "ar") {
+            setLocale(this, "ar")
+        } else {
+            setLocale(this, "en")
+        }
+
         if (sharedPreferences.getBoolean(DARK_THEME, false)) {
             // setTheme(R.style.Theme_DontSayIt)//.DarkTheme)
 
-            Toast.makeText(this, "SplashActivity MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
+         //   Toast.makeText(this, "SplashActivity MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
             // resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_YES
 
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
         } else {
             //  setTheme(R.style.Theme_DontSayIt) //.AppTheme)
-            Toast.makeText(this, "SplashActivity MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
+          //  Toast.makeText(this, "SplashActivity MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
             // resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_NO
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
-        /*
-               if (sharedPreferences.getString(LANG, "en") == "ar") {
-                   setLocale(this, "ar")
-               } else {
-                   setLocale(this, "en")
-               }
-       */
+
+
+
         CoroutineScope(Dispatchers.Main).launch {
             logo.startAnimation(bounce)
-            delay(5000)
-            Toast.makeText(this@SplashActivity, "start", Toast.LENGTH_SHORT).show()
+            delay(2000)
+          //  Toast.makeText(this@SplashActivity, "start", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
 
             finish()

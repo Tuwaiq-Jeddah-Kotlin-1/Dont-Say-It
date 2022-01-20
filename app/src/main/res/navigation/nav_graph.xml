@@ -76,7 +76,8 @@
         <argument
             android:name="picUrl"
             app:argType="string"
-            android:defaultValue="https://firebasestorage.googleapis.com/v0/b/don-t-say-it.appspot.com/o/pic_a.png?alt=media&amp;token=e7dccd9e-7141-4255-9987-8de76769c450" />
+            app:nullable="true"
+            android:defaultValue="null" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"

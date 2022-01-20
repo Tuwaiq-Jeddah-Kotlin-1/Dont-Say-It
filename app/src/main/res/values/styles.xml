@@ -53,10 +53,7 @@
         <item name="fontFamily">@font/tajawal_regular</item>
         <item name="android:textSize">16dp</item>
     </style>
-    <style name="text20" parent="">
-        <item name="fontFamily">@font/tajawal_regular</item>
-        <item name="android:textSize">20dp</item>
-    </style>
+
     <style name="text12" parent="">
         <item name="fontFamily">@font/tajawal_regular</item>
         <item name="android:textSize">12dp</item>

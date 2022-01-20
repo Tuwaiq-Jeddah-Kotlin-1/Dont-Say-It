@@ -33,25 +33,6 @@ class MainActivity : AppCompatActivity() {
         val inflater = navHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.nav_graph)
         sharedPreferences = this.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-        /*  val uId = sharedPreferences.getString(UID, null)
-        uId?.let { fillShared(it) } */
-
-      /*  if (sharedPreferences.getBoolean(DARK_THEME, false)) {
-            //setTheme(R.style.Theme_DontSayItNight)//.DarkTheme)
-            //  Toast.makeText(this,"GameActivity MODE_NIGHT_YES", Toast.LENGTH_SHORT).show()
-
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            //setTheme(R.style.Theme_DontSayIt) //.AppTheme)
-            //Toast.makeText(this,"GameActivity MODE_NIGHT_NO", Toast.LENGTH_SHORT).show()
-
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }*/
-        if (sharedPreferences.getString(LANG, "en") == "ar") {
-            setLocale(this, "ar")
-        } else {
-            setLocale(this, "en")
-        }
 
         notification()
         sharedPreferences = this.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
@@ -63,14 +44,6 @@ class MainActivity : AppCompatActivity() {
         }
         navHostFragment.navController.graph = graph
     }
-
-    /*private fun fillShared(uId: String) {
-        viewModel.getUserById(uId).observe(this, {
-            Toast.makeText(this,"",Toast.LENGTH_SHORT).show()
-            sharedPreferences.edit().putString(USERNAME, it.username).apply()
-          //  playerName = it.username
-        })
-    }*/
 
     private fun notification() {
         val periodicWorker = PeriodicWorkRequest.Builder(
@@ -84,15 +57,6 @@ class MainActivity : AppCompatActivity() {
         ) //unique work
 
 
-    }
-
-    private fun setLocale(activity: Activity, languageCode: String) {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val resources = activity.resources
-        val config: Configuration = resources.configuration
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
 }

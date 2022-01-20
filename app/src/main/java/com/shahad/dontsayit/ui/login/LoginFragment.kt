@@ -37,12 +37,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         findView(view)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
-        /* sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-         val emailPref = sharedPreferences.getString(EMAIL, null)
 
-         if (emailPref != null) {
-             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-         }*/
         btnLogin.setOnClickListener {
             if (viewModel.checkConnection(requireContext())) {
                 if (sendToCheck()) {
@@ -50,14 +45,6 @@ class LoginFragment : Fragment() {
                         etEmail.text.toString().trim(),
                         etPassword.text.toString().trim(), findNavController()
                     )
-                    Log.i("signin", "login checked")
-
-
-                    /*  if (emailPref != null) {
-                  Toast.makeText(view.context, emailPref, Toast.LENGTH_LONG).show()
-                  findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                  }*/
-
                 }
             }else{
                 Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
@@ -67,8 +54,6 @@ class LoginFragment : Fragment() {
 
         btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
-
-            Log.i("Login: ", "nav to register")
         }
 
     }

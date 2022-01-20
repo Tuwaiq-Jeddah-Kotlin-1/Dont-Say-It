@@ -37,8 +37,8 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/btnCancel"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnJoin"
+        app:layout_constraintEnd_toStartOf="@+id/btnPaste"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -46,65 +46,36 @@
             android:id="@+id/keyword"
             android:layout_width="287dp"
             style="@style/text18"
-
             android:layout_height="wrap_content"
             android:hint="@string/lobby_keyword" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <!--  <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/btnCreate"
+    <ImageButton
+        android:id="@+id/btnPaste"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:background="@drawable/paste"
+        app:layout_constraintStart_toEndOf="@+id/keywordlayout"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/btnJoin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/keywordlayout"
-        app:layout_constraintTop_toBottomOf="@id/dialogHeader">
-
-        <TextView
-            android:id="@+id/tvPlayers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/players"
-            android:textSize="20sp" />
-
-        <NumberPicker
-            android:id="@+id/numberPicker"
-            android:layout_width="60dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp" />
-    </LinearLayout>-->
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
-    <!--  <ImageButton
-          android:id="@+id/btnCopyLink"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_launcher_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageButton
-        android:id="@+id/btnCreate"
+        android:id="@+id/btnJoin"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/btn_green_nobg"
         android:text="@string/create_lobby_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnCancel" />
-    <!--
-        app:layout_constraintTop_toBottomOf="guideline2"
-    -->
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 
     <TextView
@@ -112,35 +83,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/join_lobby_btn"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCreate"
-        app:layout_constraintEnd_toEndOf="@+id/btnCreate"
-        app:layout_constraintStart_toStartOf="@+id/btnCreate"
-        app:layout_constraintTop_toTopOf="@+id/btnCreate" />
+        app:layout_constraintBottom_toBottomOf="@+id/btnJoin"
+        app:layout_constraintEnd_toEndOf="@+id/btnJoin"
+        app:layout_constraintStart_toStartOf="@+id/btnJoin"
+        app:layout_constraintTop_toTopOf="@+id/btnJoin" />
 
-    <ImageButton
-        android:id="@+id/btnCancel"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/btn_gray"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnCreate"
-        app:layout_constraintStart_toStartOf="parent" />
-    <!--
-        app:layout_constraintTop_toBottomOf="guideline2"
-    -->
-
-    <TextView
-        style="@style/constBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCancel"
-        app:layout_constraintEnd_toEndOf="@+id/btnCancel"
-        app:layout_constraintStart_toStartOf="@+id/btnCancel"
-        app:layout_constraintTop_toTopOf="@+id/btnCancel" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
