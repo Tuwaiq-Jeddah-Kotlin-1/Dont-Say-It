@@ -3,67 +3,54 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
-  <ImageView
-      android:id="@+id/redx"
-      android:layout_width="150dp"
-      android:layout_height="190dp"
-      android:elevation="1dp"
-      android:src="@drawable/red_x"
-      android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/redx"
+        android:layout_width="150dp"
+        android:layout_height="190dp"
+        android:elevation="1dp"
+        android:src="@drawable/red_x"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-      <TextView
-          android:id="@+id/tvWord"
-          style="@style/text18"
-          android:layout_width="150dp"
-          android:layout_height="50dp"
-          android:layout_centerHorizontal="true"
-          android:background="@drawable/paper"
-          android:elevation="6sp"
+        <TextView
+            android:id="@+id/tvWord"
+            style="@style/text18"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/paper"
+            android:elevation="6sp"
 
-          android:paddingStart="20dp"
-          android:paddingTop="10dp"
-          android:paddingEnd="20dp"
-          android:paddingBottom="10dp"
-          android:textAlignment="center" />
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center" />
 
-      <ImageView
-          android:id="@+id/imgPlayer"
-          android:layout_width="150dp"
-          android:layout_height="150dp"
-          android:layout_alignTop="@id/tvWord"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="30dp"
-          android:contentDescription="@string/contentDescription_face_blinking_animation"
-          android:src="@drawable/user" />
-<!--
-      android:visibility="gone"
--->
+        <ImageView
+            android:id="@+id/imgPlayer"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignTop="@id/tvWord"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/contentDescription_face_blinking_animation"
+            android:src="@drawable/user" />
 
-      <TextView
-          android:id="@+id/tvState"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/imgPlayer"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="10dp"
-          android:hint="state"
-          android:visibility="gone"
-          android:textAlignment="center"
-          android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tvUsername"
-        style="@style/text18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvState"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:hint="@string/username"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/tvUsername"
+            style="@style/text18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgPlayer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:hint="@string/username"
+            android:textAlignment="center" />
     </RelativeLayout>
 
 </FrameLayout>

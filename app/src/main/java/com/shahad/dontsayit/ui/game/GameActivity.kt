@@ -15,18 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.R
-import com.shahad.dontsayit.Util.checkConnection
 import com.shahad.dontsayit.data.model.Player
 import com.shahad.dontsayit.data.model.Word
 import com.shahad.dontsayit.data.network.ViewModel
+import com.shahad.dontsayit.databinding.ActivityGameBinding
+import com.shahad.dontsayit.util.checkConnection
 
 class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
-    private lateinit var recyclerview: RecyclerView
-    private lateinit var tvKeyword: TextView
-    private lateinit var tvRoundTitle: TextView
-    private lateinit var imgBtnScore: ImageButton
-    private lateinit var btnStart: ImageButton
-    private lateinit var close: ImageButton
 
     private lateinit var viewModel: ViewModel
     private lateinit var preference: SharedPreferences
@@ -57,12 +52,13 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
     private lateinit var scoreListener: ChildEventListener
     private lateinit var stateListener: ChildEventListener
     private lateinit var profilePicListener: ChildEventListener
-
+    private lateinit var binding: ActivityGameBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
-        findView()
-        recyclerview.layoutManager = GridLayoutManager(this, 2)
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.recyclerview.layoutManager = GridLayoutManager(this, 2)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         observeWord()
 
@@ -75,13 +71,13 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
             roomName = extra.getString(ROOM_NAME).toString()
             hostName = extra.getString(HOST_NAME).toString()
         }
-        tvKeyword.text = roomName
+
         if (hostName == playerName) {//if the room is by his name then hes the host
             role = "host"
-            btnStart.isVisible = true
+            binding.btnStart.isVisible = true
         } else {
             role = "guest"
-            btnStart.isVisible = false
+            binding.btnStart.isVisible = false
         }
 
         roomRef = database.getReference("rooms/$roomName")
@@ -93,27 +89,28 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
         scoreRef = database.getReference("rooms/${roomName}/score")
 
 
-        imgBtnScore.setOnClickListener {
+        binding.imgbtnscore.setOnClickListener {
             scoreDialog()
         }
 
-        btnStart.setOnClickListener {//show recycler view with random words
-if (checkConnection(this,viewModel.checkConnection(this))){
-            if (playersListObj.size < 2) {
-                Toast.makeText(this, "not enough players to start the game", Toast.LENGTH_LONG)
-                    .show()
-                btnStart.isEnabled = true
-                btnStart.background =
-                    ContextCompat.getDrawable(this, R.drawable.play_button)
+        binding.btnStart.setOnClickListener {//show recycler view with random words
+            if (checkConnection(this, viewModel.checkConnection(this))) {
+                if (playersListObj.size < 2) {
+                    Toast.makeText(this, R.string.notenough, Toast.LENGTH_LONG)
+                        .show()
+                    binding.btnStart.isEnabled = true
+                    binding.btnStart.background =
+                        ContextCompat.getDrawable(this, R.drawable.play_button)
 
-            } else {
-                assignWord()
-                addRoomEventListener()
+                } else {
+                    assignWord()
+                    addRoomEventListener()
+                }
+            }
+            binding.close.setOnClickListener {
+                onBackPressed()
             }
         }
-        close.setOnClickListener {
-            onBackPressed()
-        }}
 
         roundNumberObserver()
         addRoomEventListener()
@@ -128,9 +125,9 @@ if (checkConnection(this,viewModel.checkConnection(this))){
     private fun roundNumberObserver() {
         viewModel.getRound(roundRef).observe(this, {
             if (it.toInt() == 0) {
-                tvRoundTitle.text = "Round"
+                binding.tvRoundTitle.text = resources.getText(R.string.round)
             } else {
-                tvRoundTitle.text = "${it.toInt()}"
+                binding.tvRoundTitle.text = "${it.toInt()}"
 
             }
         }
@@ -142,6 +139,8 @@ if (checkConnection(this,viewModel.checkConnection(this))){
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.score_dialog)
         val recyclerviewScore: RecyclerView = dialog.findViewById(R.id.recyclerviewScore)
+        val code: TextView = dialog.findViewById(R.id.keyword)
+        code.text = roomName
         recyclerviewScore.layoutManager = LinearLayoutManager(this)
         recyclerviewScore.adapter = ScoreAdapter(playersListObj)
         dialog.show()
@@ -180,8 +179,8 @@ if (checkConnection(this,viewModel.checkConnection(this))){
             Log.i("new word", playersListObj.keys.elementAt(i))
 
         }
-        btnStart.isEnabled = false
-        btnStart.background =
+        binding.btnStart.isEnabled = false
+        binding.btnStart.background =
             ContextCompat.getDrawable(this, R.drawable.gray_play_button)
     }
 
@@ -190,22 +189,16 @@ if (checkConnection(this,viewModel.checkConnection(this))){
         dialog.setContentView(R.layout.winner_dialog)
         val title: TextView = dialog.findViewById(R.id.tvwinner)
         val message: TextView = dialog.findViewById(R.id.tvmessage)
-        title.text = "$winner Won!"
-        message.text = "better luck next round!"
+
+        title.text = "$winner ${resources.getText(R.string.Won)}"
+
+        message.text = resources.getText(R.string.nextround)
         dialog.show()
-        btnStart.isEnabled = true
-        btnStart.background =
+        binding.btnStart.isEnabled = true
+        binding.btnStart.background =
             ContextCompat.getDrawable(this, R.drawable.play_button)
     }
 
-    private fun findView() {
-        recyclerview = findViewById(R.id.recyclerview)
-        tvKeyword = findViewById(R.id.tvRoomKey)
-        tvRoundTitle = findViewById(R.id.tvRoundTitle)
-        imgBtnScore = findViewById(R.id.imgbtnscore)
-        btnStart = findViewById(R.id.btnStart)
-        close = findViewById(R.id.close)
-    }
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -216,7 +209,7 @@ if (checkConnection(this,viewModel.checkConnection(this))){
         } else {
             playerLeft()
         }
-
+        removeListeners()//added this hasn't been tested yet!!!
     }
 
     private fun deleteRoom() {
@@ -260,7 +253,7 @@ if (checkConnection(this,viewModel.checkConnection(this))){
             override fun onChildRemoved(snapshot: DataSnapshot) {
 
                 if (snapshot.key == "host") {//if host left and deleted "host" key
-                    Toast.makeText(this@GameActivity, "Host closed the lobby", Toast.LENGTH_LONG)
+                    Toast.makeText(this@GameActivity, R.string.hostleft, Toast.LENGTH_LONG)
                         .show()
 
                     finish()
@@ -289,8 +282,8 @@ if (checkConnection(this,viewModel.checkConnection(this))){
                 Log.i("$playerName playersListObj addPlayersListener", playersListObj.toString())
 
                 if (hostName == playerName) {
-                    btnStart.isEnabled = true
-                    btnStart.background =
+                    binding.btnStart.isEnabled = true
+                    binding.btnStart.background =
                         ContextCompat.getDrawable(this@GameActivity, R.drawable.play_button)
                 }
             }
@@ -305,7 +298,9 @@ if (checkConnection(this,viewModel.checkConnection(this))){
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                recyclerview.adapter!!.notifyItemRemoved(
+                playersListObj.keys.indexOf(snapshot.key.toString())////new removed added has not been tested!!
+
+                binding.recyclerview.adapter!!.notifyItemRemoved(
                     playersListObj.minus(playerName).keys.indexOf(
                         snapshot.key.toString()
                     )
@@ -347,7 +342,7 @@ if (checkConnection(this,viewModel.checkConnection(this))){
                 playersListObj[snapshot.key]?.word = snapshot.value.toString()
                 //  playersListObj[snapshot.key]?.state = "in"// when new words generated change state to in
                 Log.i("$playerName playersListObj addWordEventListener", playersListObj.toString())
-                recyclerview.adapter = GameAdapter(
+                binding.recyclerview.adapter = GameAdapter(
                     playersListObj.minus(playerName),
                     this@GameActivity
                 )
@@ -364,7 +359,7 @@ if (checkConnection(this,viewModel.checkConnection(this))){
     private fun addStateEventListener() {
         stateListener = stateRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                recyclerview.adapter = GameAdapter(
+                binding.recyclerview.adapter = GameAdapter(
                     playersListObj.minus(playerName),
                     this@GameActivity
                 )
@@ -375,7 +370,7 @@ if (checkConnection(this,viewModel.checkConnection(this))){
                 playersListObj[snapshot.key.toString()]!!.state = snapshot.value.toString()
                 Log.i("$playerName playersListObj addStateEventListener", playersListObj.toString())
 
-                if (playersListObj.values.none { it.state == "winner" }&&snapshot.value!="in") {
+                if (playersListObj.values.none { it.state == "winner" } && snapshot.value != "in") {
                     var remainingPlayer = playersListObj.filter {
 
                         it.value.state == "in"
@@ -403,7 +398,7 @@ if (checkConnection(this,viewModel.checkConnection(this))){
 
 
 
-                recyclerview.adapter = GameAdapter(
+                binding.recyclerview.adapter = GameAdapter(
                     playersListObj.minus(playerName),
                     this@GameActivity
 
@@ -492,7 +487,16 @@ if (checkConnection(this,viewModel.checkConnection(this))){
     override fun onDestroy() {
         super.onDestroy()
         Log.i("onDestroy", "GameActivity removingListeners")
+        removeListeners()
 
+        //viewModel.getRound().removeObserver()
+
+// check if room still in db and remove it
+
+
+    }
+
+    private fun removeListeners() {
         if (this::roomRef.isInitialized) {
             roomRef.removeEventListener(roomListener)
         }
@@ -511,11 +515,6 @@ if (checkConnection(this,viewModel.checkConnection(this))){
         if (this::picRef.isInitialized) {
             picRef.removeEventListener(profilePicListener)
         }
-        //viewModel.getRound().removeObserver()
-
-// check if room still in db and remove it
-
-
     }
 
     override fun onItemClick(item: Player?) {
@@ -527,12 +526,12 @@ if (checkConnection(this,viewModel.checkConnection(this))){
                     playersListObj[item.name]!!.state = "out"
                     Log.i("$playerName onItemClick", "out")
 
-                }else if (item.state == "out") {//in case winner or out,  maybe make winner unchangeable
+                } else if (item.state == "out") {//in case winner or out,  maybe make winner unchangeable
                     stateRef.child(item.name).setValue("in")
                     playersListObj[item.name]!!.state = "in"
                     Log.i("$playerName onItemClick", "in")
                 }
-                recyclerview.adapter!!.notifyItemChanged(playersListObj.keys.indexOf(item.name))
+                binding.recyclerview.adapter!!.notifyItemChanged(playersListObj.keys.indexOf(item.name))
             }
         }
     }

@@ -1,85 +1,84 @@
 package com.shahad.dontsayit.ui.login
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.*
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.shahad.dontsayit.R
-import com.shahad.dontsayit.Util.checkConnection
-import com.shahad.dontsayit.checkIfEmpty
 import com.shahad.dontsayit.data.network.ViewModel
+import com.shahad.dontsayit.databinding.FragmentLoginBinding
+import com.shahad.dontsayit.util.checkConnection
+import com.shahad.dontsayit.util.checkIfEmpty
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
     private lateinit var viewModel: ViewModel
-    private lateinit var sharedPreferences: SharedPreferences
-    private val auth = FirebaseAuth.getInstance()
-
-    private lateinit var etEmail: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var btnLogin: ImageButton
-    private lateinit var btnRegister: TextView
     private lateinit var scaleDown: Animation
-
+    private lateinit var binding: FragmentLoginBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findView(view)
+        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
-        btnLogin.setOnClickListener {
+        binding.etEmail.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.emaillayout.helperText = validation(binding.etEmail)
+            }
+        }
+        binding.etPassword.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.passwordlayout.helperText = validation(binding.etPassword)
+            }
+        }
+        binding.btnLogin.setOnClickListener {
             lifecycleScope.launch {
-                btnLogin.startAnimation(scaleDown)
+                binding.btnLogin.startAnimation(scaleDown)
                 delay(100)
-            if (checkConnection(
-                    requireContext(),
-                    viewModel.checkConnection(requireContext())
-                )
-            ){
-                if (sendToCheck()) {
-                    viewModel.signIn(
-                        etEmail.text.toString().trim(),
-                        etPassword.text.toString().trim(), findNavController()
+                if (checkConnection(
+                        requireContext(),
+                        viewModel.checkConnection(requireContext())
                     )
+                ) {
+                    if (sendToCheck()) {
+                        viewModel.signIn(
+                            binding.etEmail.text.toString().trim(),
+                            binding.etPassword.text.toString().trim(), findNavController()
+                        )
+                    }
                 }
             }
-        }}
+        }
 
-        btnRegister.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
         }
 
     }
 
-    private fun findView(view: View) {
-        etEmail = view.findViewById(R.id.etEmail)
-        etPassword = view.findViewById(R.id.etPassword)
-        btnLogin = view.findViewById(R.id.btnLogin)
-        btnRegister = view.findViewById(R.id.btnRegister)
-        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
-
+    private fun validation(editText: EditText): String? {
+        return checkIfEmpty(editText.text.toString().trim())
     }
 
+
     private fun sendToCheck(): Boolean {
-        return etEmail.checkIfEmpty(etEmail.text.toString().trim()) &&
-                etPassword.checkIfEmpty(etPassword.text.toString().trim())
+        return checkIfEmpty(binding.etEmail.text.toString().trim()) == null &&
+                checkIfEmpty(binding.etPassword.text.toString().trim()) == null
     }
 }

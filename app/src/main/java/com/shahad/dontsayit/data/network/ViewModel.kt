@@ -5,17 +5,22 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
-import android.view.animation.Animation
-import android.widget.ImageButton
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.firebase.database.DatabaseReference
 import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.model.Word
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.MutableSet
+import kotlin.collections.forEach
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 class ViewModel(context: Application) : AndroidViewModel(context) {
 

@@ -5,7 +5,6 @@ plugins {
     id 'com.google.secrets_gradle_plugin' version '0.4'//api key
     id 'kotlin-parcelize'//parcelize
     id 'androidx.navigation.safeargs.kotlin'//nav args
-    //id 'kotlin-kapt'//dataBinding
 }
 
 android {
@@ -34,9 +33,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-   /* dataBinding {
-        enabled = true
-    }*/
+
     buildFeatures {
         viewBinding true
     }

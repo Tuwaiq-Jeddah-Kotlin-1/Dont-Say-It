@@ -14,8 +14,8 @@ class WorkerNotification(private val context: Context, workParams: WorkerParamet
         val notification =
             NotificationCompat.Builder(context, CHANNEL_ID).setTicker(NOTIFICATION_NAME)
 
-               // .setSmallIcon(android.R.drawable.ic_dialog_alert)
-               // .setLargeIcon()
+                // .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                // .setLargeIcon()
                 .setContentTitle("Shhhh")
                 .setContentText("come play..")
                 .setAutoCancel(true)//when we click it, it gets dismissed

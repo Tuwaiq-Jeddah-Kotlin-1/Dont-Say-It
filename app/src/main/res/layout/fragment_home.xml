@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".ui.main.HomeFragment"
-    tools:viewBindingIgnore="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.main.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -156,27 +155,28 @@
             app:layout_constraintTop_toTopOf="@+id/btnHow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-     <RelativeLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_alignParentBottom="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
 
-    <ImageButton
-        android:id="@+id/imgbtnsuggest"
-        android:background="@drawable/review"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="20dp"
-       android:layout_alignParentStart="true"
-        />
-         <ImageButton
-             android:id="@+id/imgBtnSettings"
-             android:layout_width="40dp"
-             android:layout_height="40dp"
-             android:layout_marginTop="10dp"
-             android:background="@drawable/settings_gear"
-             android:layout_margin="20dp"
-android:layout_alignParentEnd="true"             />
-     </RelativeLayout>
+        <ImageButton
+            android:id="@+id/imgbtnsuggest"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/review" />
+
+        <ImageButton
+            android:id="@+id/imgBtnSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/settings_gear" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -1,8 +1,10 @@
 package com.shahad.dontsayit.ui.main
 
 import android.app.Dialog
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,24 +17,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.shahad.dontsayit.*
+import com.shahad.dontsayit.HOST_NAME
 import com.shahad.dontsayit.R
-import com.shahad.dontsayit.Util.checkConnection
+import com.shahad.dontsayit.ROOM_NAME
 import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.network.ViewModel
+import com.shahad.dontsayit.databinding.FragmentHomeBinding
 import com.shahad.dontsayit.ui.game.GameActivity
+import com.shahad.dontsayit.util.checkConnection
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeFragment : Fragment() {
-    private lateinit var btnCreateLobby: ImageButton
-    private lateinit var btnJoinLobby: ImageButton
-    private lateinit var btnHow: ImageButton
-    private lateinit var imgbtnsuggest: ImageButton
-    private lateinit var imgBtnSettings: ImageButton
-    private lateinit var sharedPreferences: SharedPreferences
+
     private lateinit var viewModel: ViewModel
     private lateinit var shake: Animation
     private lateinit var scaleUp: Animation
@@ -53,46 +53,48 @@ class HomeFragment : Fragment() {
     private var roomCreateJoin: Boolean = false
     private lateinit var roomListener: ValueEventListener
     private lateinit var roomsListener: ValueEventListener
-
+    private val auth = FirebaseAuth.getInstance()
+    private val user = auth.currentUser!!
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findView(view)
-        viewModel = ViewModelProvider(this)[ViewModel::class.java]
-        sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-        val uId = sharedPreferences.getString(UID, null)
-        uId?.let { fillShared(it) }
 
+        viewModel = ViewModelProvider(this)[ViewModel::class.java]
+        loadAnimation()
+        playerName = user.displayName ?: ""
+        profilePic = user.photoUrl.toString()
         roomsRef = database.getReference("rooms")
 
 
 
-        btnCreateLobby.setOnClickListener {
+        binding.btnCreateLobby.setOnClickListener {
             lifecycleScope.launch {
-                btnCreateLobby.startAnimation(scaleDown)
+                binding.btnCreateLobby.startAnimation(scaleDown)
                 delay(100)
 
                 if (checkConnection(
                         requireContext(),
                         viewModel.checkConnection(requireContext())
                     )
-                )  {
+                ) {
                     createRoomDialog()
                 }
 
             }
         }
-        btnJoinLobby.setOnClickListener {
+        binding.btnJoinLobby.setOnClickListener {
             lifecycleScope.launch {
-                btnJoinLobby.startAnimation(scaleDown)
+                binding.btnJoinLobby.startAnimation(scaleDown)
                 delay(100)
 
                 if (checkConnection(
@@ -104,17 +106,17 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        btnHow.setOnClickListener {
+        binding.btnHow.setOnClickListener {
             lifecycleScope.launch {
-                btnHow.startAnimation(scaleDown)
+                binding.btnHow.startAnimation(scaleDown)
                 delay(100)
                 findNavController().navigate(R.id.action_homeFragment_to_howToPlayFragment)
 
             }
         }
-        imgbtnsuggest.setOnClickListener {
+        binding.imgbtnsuggest.setOnClickListener {
             lifecycleScope.launch {
-                imgbtnsuggest.startAnimation(scaleDown)
+                binding.imgbtnsuggest.startAnimation(scaleDown)
                 delay(100)
 
                 if (checkConnection(
@@ -126,9 +128,9 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        imgBtnSettings.setOnClickListener {
+        binding.imgBtnSettings.setOnClickListener {
             lifecycleScope.launch {
-                imgBtnSettings.startAnimation(scaleUp)
+                binding.imgBtnSettings.startAnimation(scaleUp)
                 delay(100)
                 findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
             }
@@ -140,6 +142,7 @@ class HomeFragment : Fragment() {
 
     private fun suggestionDialog() {
         val dialog = Dialog(requireContext())
+
         dialog.setContentView(R.layout.suggestion_dialog)
         val etSuggest: EditText = dialog.findViewById(R.id.etSuggestion)
         val btnSuggest: ImageButton = dialog.findViewById(R.id.btnSuggestion)
@@ -161,22 +164,8 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun fillShared(uId: String) {
-        viewModel.getUserById(uId).observe(viewLifecycleOwner, {
-            sharedPreferences.edit().putString(USERNAME, it.username).apply()
-            playerName = it.username
-            sharedPreferences.edit().putString(PIC, it.profilePic).apply()
-            profilePic = it.profilePic
 
-        })
-    }
-
-    private fun findView(view: View) {
-        btnCreateLobby = view.findViewById(R.id.btnCreateLobby)
-        btnJoinLobby = view.findViewById(R.id.btnJoinLobby)
-        btnHow = view.findViewById(R.id.btnHow)
-        imgBtnSettings = view.findViewById(R.id.imgBtnSettings)
-        imgbtnsuggest = view.findViewById(R.id.imgbtnsuggest)
+    private fun loadAnimation() {
         shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
         scaleUp = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
         scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
@@ -244,7 +233,7 @@ class HomeFragment : Fragment() {
 
                 roomCreateJoin = true
 
-                btnCreateLobby.isEnabled = false
+                binding.btnCreateLobby.isEnabled = false
                 roomName = tvKeyword.text.toString()
 
                 if (!roomsList.contains(roomName)) {
@@ -257,10 +246,10 @@ class HomeFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "room key is taken choose another key",
+                        R.string.roomcodetaken,
                         Toast.LENGTH_LONG
                     ).show()
-                    btnCreateLobby.isEnabled = true
+                    binding.btnCreateLobby.isEnabled = true
 
                 }
             }
@@ -270,9 +259,9 @@ class HomeFragment : Fragment() {
                 btncopy.startAnimation(scaleDown)
                 delay(100)
 
-                val clip: ClipData = ClipData.newPlainText("Room password", tvKeyword.text)
+                val clip: ClipData = ClipData.newPlainText("Room code", tvKeyword.text)
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(requireContext(), "Password Copied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "code Copied", Toast.LENGTH_SHORT).show();
             }
         }
         btnshare.setOnClickListener {
@@ -301,12 +290,11 @@ class HomeFragment : Fragment() {
         btnJoin.setOnClickListener {
             lifecycleScope.launch {
                 btnJoin.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
                 roomCreateJoin = true
                 roomName = edKeyword.text.toString()
-                btnJoinLobby.isEnabled = false
+                binding.btnJoinLobby.isEnabled = false
                 //check if room exists
                 if (roomsList.contains(roomName)) {
                     //check players number before adding another player
@@ -314,9 +302,9 @@ class HomeFragment : Fragment() {
                     checkPlayersNum(dialog)
 
                 } else {
-                    Toast.makeText(requireContext(), "room doesn't exists", Toast.LENGTH_LONG)
+                    Toast.makeText(requireContext(), R.string.nolobby, Toast.LENGTH_LONG)
                         .show()
-                    btnJoinLobby.isEnabled = true
+                    binding.btnJoinLobby.isEnabled = true
                 }
             }
         }
@@ -350,9 +338,9 @@ class HomeFragment : Fragment() {
                         addRoomEventListener()
 
                     } else {
-                        Toast.makeText(requireContext(), "this room is full", Toast.LENGTH_LONG)
+                        Toast.makeText(requireContext(), R.string.fulllobby, Toast.LENGTH_LONG)
                             .show()
-                        btnJoinLobby.isEnabled = true
+                        binding.btnJoinLobby.isEnabled = true
 
                     }
                 }
@@ -381,8 +369,8 @@ class HomeFragment : Fragment() {
                 if (roomCreateJoin) {// if true then the change is  creating/joining room
 
                     //join the room
-                    btnCreateLobby.isEnabled = true
-                    btnJoinLobby.isEnabled = true
+                    binding.btnCreateLobby.isEnabled = true
+                    binding.btnJoinLobby.isEnabled = true
 
                     val intent = Intent(requireContext(), GameActivity::class.java)
                     intent.putExtra(ROOM_NAME, roomName)
@@ -394,8 +382,8 @@ class HomeFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {
                 //error
-                btnCreateLobby.isEnabled = true
-                btnJoinLobby.isEnabled = true
+                binding.btnCreateLobby.isEnabled = true
+                binding.btnJoinLobby.isEnabled = true
                 Toast.makeText(requireContext(), "Error!", Toast.LENGTH_SHORT).show()
             }
 
@@ -426,12 +414,13 @@ class HomeFragment : Fragment() {
     private fun saveToAPI(value: String) {
         val suggestions = UserSuggestions()
         suggestions.suggestion = value
-        if (checkConnection(requireContext(),viewModel.checkConnection(requireContext()))){
-        viewModel.userRequests(suggestions)
-        Toast.makeText(
-            context,
-            "Thank you for being a part of this game \uD83E\uDD73",
-            Toast.LENGTH_LONG
-        ).show()
-    }}
+        if (checkConnection(requireContext(), viewModel.checkConnection(requireContext()))) {
+            viewModel.userRequests(suggestions)
+            Toast.makeText(
+                context,
+                "Thank you for being a part of this game \uD83E\uDD73",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 }

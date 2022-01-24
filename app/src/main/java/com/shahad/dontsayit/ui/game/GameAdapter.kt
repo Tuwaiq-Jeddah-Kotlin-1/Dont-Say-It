@@ -25,7 +25,7 @@ class GameAdapter(
     override fun onBindViewHolder(holder: ItemAdapter, position: Int) {
 
         val player = playerObjList[playerObjList.keys.elementAt(position)]
-        holder.bind(player!!, position)
+        holder.bind(player!!)
 
     }
 
@@ -46,13 +46,12 @@ class GameAdapter(
             itemView.setOnClickListener(this)
         }
 
-        fun bind(player: Player?, position: Int) {
+        fun bind(player: Player?) {
             player?.let {
                 item = player
                 itemBinding.tvUsername.text = player.name//username
                 itemBinding.tvWord.text = player.word//word
                 itemBinding.tvWord.setTextColor(Color.BLACK)
-                itemBinding.tvState.text = player.state//state
                 itemBinding.imgPlayer.load(player.pic)//pic
                 if (player.state == "out") {
                     itemBinding.redx.visibility = View.VISIBLE

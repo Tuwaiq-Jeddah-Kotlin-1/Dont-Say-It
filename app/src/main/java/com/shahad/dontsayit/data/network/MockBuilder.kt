@@ -8,6 +8,7 @@ object MockBuilder {
 
     private const val BASE_URL =
         "https://$mockAPIKey.mockapi.io/"
+
     private fun retrofit(): Retrofit =
         Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -2,7 +2,6 @@
 <resources>
     <string name="how_to_play_txt">كيف العب</string>
     <string name="start_in_game">العب</string>
-    <string name="reset_in_game">اعادة</string>
     <string name="title_log_in">تسجيل الدخول</string>
     <string name="email">الايميل</string>
     <string name="password">الرمز السري</string>
@@ -22,12 +21,36 @@
     <string name="create_lobby_btn">انشاء جلسة</string>
     <string name="players">عدد اللاعبين</string>
     <string name="lobby_keyword">رمز الغرفة</string>
-    <string name="username_hint">اسم المستخدم</string>
-    <string name="cancel">الغاء</string>
     <string name="game_details_dialog_header">تفاصيل الجلسة</string>
     <string name="write_us_a_suggestion">اكتب لنا اقتراحك</string>
     <string name="edit_text_suggestion">اقتراح</string>
     <string name="suggest_btn_send">ارسال</string>
     <string name="language">اللغة</string>
+    <string name="notenough">لا يوجد عدد كاف من اللاعبين لبدء اللعبة</string>
+    <string name="round">جولة</string>
+    <string name="Won">فاز!</string>
+    <string name="nextround">حظ أفضل في الجولة القادمة!</string>
+    <string name="hostleft">المضيف اغلق الجلسة</string>
+    <string name="chosephoto">اختر صورة الملف الشخصي</string>
+    <string name="roomcodetaken">"تم أخذ رمز الجلسة ، اختر رمزًا آخر "</string>
+    <string name="nolobby">الجلسة غير موجودة</string>
+    <string name="fulllobby">هذه الجلسة ممتلئة</string>
+    <string name="failed">فشل في التغيير</string>
+    <string name="noconnection">لا يوجد اتصال بالإنترنت</string>
+    <string name="required">مطلوب</string>
+    <string name="Invalid">غير صالح</string>
+    <string name="tooshort">قصير جدًا ، يتطلب 6 أحرف على الأقل</string>
+    <string name="oneupper">تحتاج على الأقل حرف واحد كبير</string>
+    <string name="onelower">تحتاج على الأقل حرف واحد صغير</string>
+    <string name="toolong">طويل جدا. 10 أحرف كحد أقصى</string>
+    <string name="game_code">كود الجلسة</string>
+    <string name="how_to_play_title">كيف العب</string>
+    <string name="change_profile_picture">تغيير صورة الملف الشخصي</string>
+    <string name="user_information">معلومات المستخدم</string>
+    <string name="appearance">المظهر</string>
+    <string name="dark">داكن</string>
+    <string name="light">فاتح</string>
+    <string name="score">النتيجة</string>
+    <string name="winner">الفائز</string>
 
 </resources>

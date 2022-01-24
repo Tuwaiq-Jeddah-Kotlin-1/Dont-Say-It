@@ -2,24 +2,28 @@ package com.shahad.dontsayit.ui.login
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
-import com.shahad.dontsayit.*
-import com.shahad.dontsayit.Util.checkConnection
+import com.shahad.dontsayit.PREFERENCE
+import com.shahad.dontsayit.R
 import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.network.ViewModel
+import com.shahad.dontsayit.databinding.FragmentSignupBinding
+import com.shahad.dontsayit.util.checkConnection
+import com.shahad.dontsayit.util.validateMail
+import com.shahad.dontsayit.util.validatePasswords
+import com.shahad.dontsayit.util.validateUsername
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -27,26 +31,33 @@ import java.util.*
 class SignupFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var viewModel: ViewModel
-    private lateinit var etUsername: EditText
+
+    /*private lateinit var etUsername: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnSignup: ImageButton
     private lateinit var btnLogin: TextView
     private lateinit var imgprofile: ImageView
-    private lateinit var imgbtnprofile: TextView
+    private lateinit var imgbtnprofile: TextView*/
     private lateinit var pictureList: Array<ProfilePicture>
     private lateinit var scaleDown: Animation
     private var chosenPic: String? = null
+
+    private lateinit var binding: FragmentSignupBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_signup, container, false)
+        binding = FragmentSignupBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findView(view)
+        // findView(view)
+        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
+
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
 
@@ -54,16 +65,14 @@ class SignupFragment : Fragment() {
         args?.let {
             if (args?.picUrl != "null") {
                 chosenPic = args?.picUrl
-                imgprofile.load(chosenPic)
+                binding.imgprofile.load(chosenPic)
             }
-            if (args?.signupdata!=null){
-               etUsername.setText( args?.signupdata!![0])
-               etEmail.setText( args?.signupdata!![1])
-               etPassword.setText( args?.signupdata!![2])
+            if (args?.signupdata != null) {
+                binding.etUsername.setText(args?.signupdata!![0])
+                binding.etEmail.setText(args?.signupdata!![1])
+                binding.etPassword.setText(args?.signupdata!![2])
             }
         }
-
-
 
         if (checkConnection(
                 requireContext(),
@@ -75,74 +84,96 @@ class SignupFragment : Fragment() {
             })
         }
 
-        imgbtnprofile.setOnClickListener {
-            if (this::pictureList.isInitialized) {
-                val action =
-                    SignupFragmentDirections.actionSignupFragmentToBottomSheetProfilePictures(
-                        pictureList
-                  , arrayOf(etUsername.text.toString(),etEmail.text.toString(),etPassword.text.toString())  )
-
-
-
-
-                findNavController().navigate(action)
+        binding.etUsername.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.usernamelayout.helperText =
+                    validateUsername(binding.etUsername.text.toString().trim())
             }
         }
-        btnSignup.setOnClickListener {
-            lifecycleScope.launch {
-                btnLogin.startAnimation(scaleDown)
-                delay(100)
-            if (checkConnection(
-                    requireContext(),
-                    viewModel.checkConnection(requireContext())
+        binding.etEmail.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.emaillayout.helperText = validateMail(
+                    binding.etEmail.text.toString().trim().lowercase(Locale.getDefault())
                 )
-            ) {
-                if (validate()) {
-                    if (chosenPic != null) {
-
-                        viewModel.signUp(
-                            chosenPic!!,
-                            etEmail.text.toString().trim().lowercase(Locale.getDefault()),
-                            etPassword.text.toString().trim(),
-                            etUsername.text.toString().trim(), findNavController()
-                        )
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "choose a profile picture",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                }
-            }}
+            }
         }
-        btnLogin.setOnClickListener {
+        binding.etPassword.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.passwordlayout.helperText =
+                    validatePasswords(binding.etPassword.text.toString().trim())
+            }
+        }
+        binding.imgprofile.setOnClickListener {
+            displayBottomsheet()
+        }
+        binding.imgbtnprofile.setOnClickListener {
+            displayBottomsheet()
+
+        }
+        binding.btnSignup.setOnClickListener {
+            lifecycleScope.launch {
+                binding.btnLogin.startAnimation(scaleDown)
+                delay(100)
+                if (checkConnection(
+                        requireContext(),
+                        viewModel.checkConnection(requireContext())
+                    )
+                ) {
+                    if (validate()) {
+                        if (chosenPic != null) {
+
+                            viewModel.signUp(
+                                chosenPic!!,
+                                binding.etEmail.text.toString().trim()
+                                    .lowercase(Locale.getDefault()),
+                                binding.etPassword.text.toString().trim(),
+                                binding.etUsername.text.toString().trim(), findNavController()
+                            )
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.chosephoto,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+                }
+            }
+        }
+        binding.btnLogin.setOnClickListener {
             findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
 
         }
     }
 
-
-    private fun findView(view: View) {
-        etUsername = view.findViewById(R.id.etUsername)
-        etEmail = view.findViewById(R.id.etEmail)
-        etPassword = view.findViewById(R.id.etPassword)
-        btnSignup = view.findViewById(R.id.btnSignup)
-        btnLogin = view.findViewById(R.id.btnLogin)
-        imgprofile = view.findViewById(R.id.imgprofile)
-        imgbtnprofile = view.findViewById(R.id.imgbtnprofile)
-        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
-
+    private fun displayBottomsheet() {
+        if (this::pictureList.isInitialized) {
+            val action =
+                SignupFragmentDirections.actionSignupFragmentToBottomSheetProfilePictures(
+                    pictureList,
+                    arrayOf(
+                        binding.etUsername.text.toString(),
+                        binding.etEmail.text.toString(),
+                        binding.etPassword.text.toString()
+                    )
+                )
+            findNavController().navigate(action)
+        }
     }
+
 
     private fun validate(): Boolean {
         //use different types to check while user typing
-        return etUsername.validateUsername(etUsername.text.toString().trim()) &&
-                etEmail.validateMail(
-                    etEmail.text.toString().trim().lowercase(Locale.getDefault())
-                ) &&
-                etPassword.validatePasswords(etPassword.text.toString().trim())
+
+        return validateUsername(
+            binding.etUsername.text.toString().trim()
+        ) == null &&
+                validateMail(
+                    binding.etEmail.text.toString().trim().lowercase(Locale.getDefault())
+                ) == null &&
+                validatePasswords(binding.etPassword.text.toString().trim()) == null
+
     }
 
 }

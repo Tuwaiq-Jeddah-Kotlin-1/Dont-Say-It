@@ -1,17 +1,19 @@
 package com.shahad.dontsayit.data.network
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shahad.dontsayit.R
-import com.shahad.dontsayit.Util.savePersist
 import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.model.User
 import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.model.Word
+import com.shahad.dontsayit.util.savePersist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -45,6 +47,7 @@ class Repo(val context: Context) {
             auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
 
                 if (task.isSuccessful) {
+                    updateUserProfile(username, Uri.parse(pic))
                     savePersist(username, email, pic, auth.uid!!, context)
                     storeUserData(User(username, email, pic), findNavController)
                     Log.d(tAG, "createUserWithEmail:success")
@@ -56,12 +59,30 @@ class Repo(val context: Context) {
             }
         }
 
+    fun updateUserProfile(
+        displayname: String = auth.currentUser!!.displayName ?: "",
+        pic: Uri = auth.currentUser!!.photoUrl ?: Uri.parse("")
+    ) {
+        auth.currentUser?.updateProfile(
+            UserProfileChangeRequest.Builder()
+                .setDisplayName(displayname)
+                .setPhotoUri(pic)
+                .build()
+        )
+    }
+
     suspend fun signIn(email: String, pass: String, findNavController: NavController) =
         withContext(Dispatchers.IO) {
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(tAG, "signInWithEmail:success")
-                    savePersist("default", email, "default", auth.uid!!, context)
+                    savePersist(
+                        auth.currentUser!!.displayName!!,
+                        email,
+                        auth.currentUser!!.photoUrl!!.toString(),
+                        auth.uid!!,
+                        context
+                    )
 
                     findNavController.navigate(R.id.action_loginFragment_to_homeFragment)
 
@@ -106,6 +127,7 @@ class Repo(val context: Context) {
         db.collection(collection).document(auth.currentUser!!.uid).update("username", username)
             .addOnCompleteListener {
                 it.addOnSuccessListener {
+                    updateUserProfile(username)
                     Log.d("updateUser", "success")
                 }
                 it.addOnFailureListener { exception ->
@@ -119,6 +141,7 @@ class Repo(val context: Context) {
         db.collection(collection).document(auth.currentUser!!.uid).update("profilePic", picId)
             .addOnCompleteListener {
                 it.addOnSuccessListener {
+                    updateUserProfile(auth.currentUser!!.displayName!!, Uri.parse(picId))
                     Log.d("updateUser", "success")
                 }
                 it.addOnFailureListener { exception ->

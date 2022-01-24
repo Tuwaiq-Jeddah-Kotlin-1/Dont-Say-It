@@ -3,11 +3,10 @@ package com.shahad.dontsayit.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.shahad.dontsayit.R
 import com.shahad.dontsayit.data.model.ProfilePicture
+import com.shahad.dontsayit.databinding.RecyclerviewProfilepictureItemBinding
 
 class PictureAdapter(
     private val profilePictureList: Array<ProfilePicture>,
@@ -16,10 +15,10 @@ class PictureAdapter(
     RecyclerView.Adapter<PictureAdapter.ItemAdapter>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAdapter {
-        val view =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.recyclerview_profilepicture_item, parent, false)
-        return ItemAdapter(view)
+        val binding = RecyclerviewProfilepictureItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return ItemAdapter(binding)
     }
 
     override fun onBindViewHolder(holder: ItemAdapter, position: Int) {
@@ -38,9 +37,10 @@ class PictureAdapter(
         fun onItemClick(item: String?)
     }
 
-    inner class ItemAdapter(itemView: View) : RecyclerView.ViewHolder(itemView),
+    inner class ItemAdapter(binding: RecyclerviewProfilepictureItemBinding) :
+        RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
-        val imgPicture: ImageView = itemView.findViewById(R.id.imgPic)
+        val imgPicture = binding.imgPic
         var item: String? = null
 
         init {

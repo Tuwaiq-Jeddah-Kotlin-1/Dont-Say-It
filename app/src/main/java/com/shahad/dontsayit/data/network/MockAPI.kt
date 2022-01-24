@@ -6,7 +6,6 @@ import com.shahad.dontsayit.data.model.Word
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
 
 interface MockAPI {
     @GET("word")

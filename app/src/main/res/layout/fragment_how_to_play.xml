@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.main.HowToPlayFragment"
-    tools:viewBindingIgnore="true">
+    tools:context=".ui.main.HowToPlayFragment">
+
     <LinearLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/view1"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
 
-            android:layout_marginEnd="10dp"
-            android:layout_gravity="center_vertical"
             android:id="@+id/back"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/ic_keyboard_arrow_left"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"  />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
 
             android:id="@+id/HowtoPlayTitle"
+            style="@style/subTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="How to Play"
+            android:text="@string/how_to_play_title"
             android:textAlignment="center"
-            style="@style/subTitle"
 
             app:layout_constraintStart_toEndOf="@id/arrow1"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
+
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="70dp"
         android:background="#959393"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvHow"
+        style="@style/text18"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        style="@style/text18"
         android:text="@string/how_to_play_txt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

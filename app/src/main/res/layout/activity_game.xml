@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".ui.game.GameActivity"
-    tools:viewBindingIgnore="true">
+    tools:context=".ui.game.GameActivity">
+
     <RelativeLayout
         android:id="@+id/relativetop"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/close"
@@ -30,10 +30,10 @@
             style="@style/dialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:hint="Round" />
+            android:layout_centerHorizontal="true"
+            android:hint="@string/round" />
 
         <ImageButton
             android:id="@+id/imgbtnscore"
@@ -44,28 +44,6 @@
             android:contentDescription="@string/contentDescription_players_list" />
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tvRoomKey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
-        style="@style/subTitle"
-        android:hint="@string/lobby_keyword"
-        android:textSize="20dp" />
-
-    <!--<ImageButton
-        android:id="@+id/imgbtnplayers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/ic_users"
-        android:contentDescription="@string/contentDescription_players_list" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -81,21 +59,11 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="160dp"
         android:layout_marginBottom="24dp"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/play_button"
         android:text="@string/start_in_game" />
 
-    <!-- <Button
-         android:id="@+id/btnReset"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="20dp"
-         android:layout_marginBottom="20dp"
-         android:text="@string/reset_in_game"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintLeft_toLeftOf="parent" />
- -->
 </RelativeLayout>
