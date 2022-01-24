@@ -1,27 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:typeface">monospace</item>
         <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
+
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:typeface">monospace</item>
         <item name="bottomSheetStyle">@style/BottomSheet</item>
     </style>
+
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
     <style name="OutlinedRoundedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.TextInputLayout.Rounded</item>
+        <item name="shapeAppearanceOverlay">
+            @style/ShapeAppearanceOverlay.MyApp.TextInputLayout.Rounded
+        </item>
     </style>
 
     <style name="ShapeAppearanceOverlay.MyApp.TextInputLayout.Rounded" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
-<style name="constBtn" parent="">
-    <item name="color">#212121</item>
-</style>
 
+
+    <style name="constBtn" parent="">
+        <!--<item name="color">#212121</item>-->
+        <item name="android:textColor">#212121</item>
+        <item name="fontFamily">@font/tajawal_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="dialogTitle" parent="">
+        <item name="fontFamily">@font/tajawal_bold</item>
+        <item name="android:textSize">25dp</item>
+
+    </style>
+
+    <style name="subTitle" parent="">
+        <item name="fontFamily">@font/tajawal_bold</item>
+        <item name="android:textSize">20dp</item>
+
+    </style>
+
+    <style name="text18" parent="">
+        <item name="fontFamily">@font/tajawal_regular</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+    <style name="text16" parent="">
+        <item name="fontFamily">@font/tajawal_regular</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="text12" parent="">
+        <item name="fontFamily">@font/tajawal_regular</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+ <style name="text14" parent="">
+        <item name="fontFamily">@font/tajawal_regular</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="superTitle" parent="">
+        <item name="fontFamily">@font/tajawal_regular</item>
+        <item name="android:textSize">40dp</item>
+    </style>
 
 </resources>

@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.main.HowToPlayFragment">
+    tools:context=".ui.main.HowToPlayFragment"
+    tools:viewBindingIgnore="true">
     <LinearLayout
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/view1"
@@ -30,8 +32,8 @@
             android:layout_height="wrap_content"
             android:text="How to Play"
             android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/subTitle"
+
             app:layout_constraintStart_toEndOf="@id/arrow1"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
@@ -49,6 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        style="@style/text18"
         android:text="@string/how_to_play_txt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

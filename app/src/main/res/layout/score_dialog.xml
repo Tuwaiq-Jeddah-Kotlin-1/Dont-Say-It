@@ -2,15 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
-<TextView
-    android:id="@+id/tvScoreTitle"
-    android:layout_width="270dp"
-    android:layout_height="wrap_content"
-    android:textSize="30dp"
-    android:text="Score"
-    android:textAlignment="center"
-    android:layout_centerHorizontal="true"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorOnPrimary"
+    android:layoutDirection="ltr"
+    android:layout_gravity="center"
+    tools:viewBindingIgnore="true">
+
+    <TextView
+        android:id="@+id/tvScoreTitle"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Score"
+        android:textAlignment="center"
+        style="@style/dialogTitle" />
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"

@@ -1,168 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.HomeFragment">
+    android:background="@color/colorPrimary"
+    tools:context=".ui.main.HomeFragment"
+    tools:viewBindingIgnore="true"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="50dp"
-        android:text="@string/game_title_don_t_nsay_it"
-        android:textAlignment="center"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btnCreateLobby"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerInParent="true">
 
-    <ImageButton
-        android:id="@+id/btnCreateLobby"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/btn_blue_nobg"
-        android:text="@string/create_lobby_btn"
-        app:layout_constraintBottom_toTopOf="@+id/btnJoinLobby"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_lobby_btn"
-        android:textSize="16dp"
-        android:textColor="@color/constBtn"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
-        app:layout_constraintEnd_toEndOf="@+id/btnCreateLobby"
-        app:layout_constraintStart_toStartOf="@+id/btnCreateLobby"
-        app:layout_constraintTop_toTopOf="@+id/btnCreateLobby" />
-
-    <View
-        android:id="@+id/arrow1"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/ic_keyboard_arrow_right"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
-        app:layout_constraintEnd_toEndOf="@+id/btnCreateLobby"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/btnCreateLobby" />
-
-    <ImageButton
-        android:id="@+id/btnJoinLobby"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/join_lobby_btn"
-        android:background="@drawable/btn_kaki_nobg"
-        app:layout_constraintBottom_toTopOf="@+id/btnHow"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCreateLobby" />
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/join_lobby_btn"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnJoinLobby"
-        app:layout_constraintEnd_toEndOf="@+id/btnJoinLobby"
-        app:layout_constraintStart_toStartOf="@+id/btnJoinLobby"
-        app:layout_constraintTop_toTopOf="@+id/btnJoinLobby" />
-
-    <View
-        android:id="@+id/arrow2"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/ic_keyboard_arrow_right"
-        app:layout_constraintBottom_toBottomOf="@+id/btnJoinLobby"
-        app:layout_constraintEnd_toEndOf="@+id/btnJoinLobby"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/btnJoinLobby" />
-    <ImageButton
-        android:id="@+id/btnHow"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/how_to_play"
-        android:background="@drawable/btn_green_nobg"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnJoinLobby" />
-   <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/how_to_play"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnHow"
-        app:layout_constraintEnd_toEndOf="@+id/btnHow"
-        app:layout_constraintStart_toStartOf="@+id/btnHow"
-        app:layout_constraintTop_toTopOf="@+id/btnHow" />
-
-    <View
-        android:id="@+id/arrow3"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/ic_keyboard_arrow_right"
-        app:layout_constraintBottom_toBottomOf="@+id/btnHow"
-        app:layout_constraintEnd_toEndOf="@+id/btnHow"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/btnHow" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/imgbtnsuggest"
-        app:layout_constraintTop_toBottomOf="@+id/btnHow">
-
-        <ImageButton
-            android:id="@+id/imgBtnShare"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="50dp"
-            android:background="@drawable/share"
-            android:contentDescription="@string/contentDescription_share"
-            app:layout_constraintEnd_toStartOf="@id/imgBtnSettings"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/title"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnCreateLobby"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnHow" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/background_tiles" />
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="90dp"
+            android:layout_marginRight="30dp"
+            android:elevation="1dp"
+            android:src="@drawable/shush"
+            app:layout_constraintBottom_toTopOf="@+id/btnCreateLobby"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <ImageButton
-            android:id="@+id/imgBtnSettings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/settings_gear"
+            android:id="@+id/btnCreateLobby"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/btn_blue_nobg"
+            android:text="@string/create_lobby_btn"
+            app:layout_constraintBottom_toTopOf="@+id/btnJoinLobby"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imgBtnShare"
-            app:layout_constraintTop_toBottomOf="@+id/btnHow" />
-    </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/constBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_lobby_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
+            app:layout_constraintEnd_toEndOf="@+id/btnCreateLobby"
+            app:layout_constraintStart_toStartOf="@+id/btnCreateLobby"
+            app:layout_constraintTop_toTopOf="@+id/btnCreateLobby" />
+
+        <View
+            android:id="@+id/arrow1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/ic_keyboard_arrow_right"
+            android:backgroundTint="#424242"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
+            app:layout_constraintEnd_toEndOf="@+id/btnCreateLobby"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="@+id/btnCreateLobby" />
+
+        <ImageButton
+            android:id="@+id/btnJoinLobby"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_kaki_nobg"
+            android:text="@string/join_lobby_btn"
+            app:layout_constraintBottom_toTopOf="@+id/btnHow"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCreateLobby" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/constBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/join_lobby_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/btnJoinLobby"
+            app:layout_constraintEnd_toEndOf="@+id/btnJoinLobby"
+            app:layout_constraintStart_toStartOf="@+id/btnJoinLobby"
+            app:layout_constraintTop_toTopOf="@+id/btnJoinLobby" />
+
+        <View
+            android:id="@+id/arrow2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/ic_keyboard_arrow_right"
+            android:backgroundTint="#424242"
+            app:layout_constraintBottom_toBottomOf="@+id/btnJoinLobby"
+            app:layout_constraintEnd_toEndOf="@+id/btnJoinLobby"
+            app:layout_constraintStart_toEndOf="@+id/textView3"
+            app:layout_constraintTop_toTopOf="@+id/btnJoinLobby" />
+
+        <ImageButton
+            android:id="@+id/btnHow"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="170dp"
+            android:background="@drawable/btn_green_nobg"
+            android:text="@string/how_to_play"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnJoinLobby" />
+
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/constBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/how_to_play"
+            app:layout_constraintBottom_toBottomOf="@+id/btnHow"
+            app:layout_constraintEnd_toEndOf="@+id/btnHow"
+            app:layout_constraintStart_toStartOf="@+id/btnHow"
+            app:layout_constraintTop_toTopOf="@+id/btnHow" />
+
+        <View
+            android:id="@+id/arrow3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/ic_keyboard_arrow_right"
+            android:backgroundTint="#424242"
+            app:layout_constraintBottom_toBottomOf="@+id/btnHow"
+            app:layout_constraintEnd_toEndOf="@+id/btnHow"
+            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintTop_toTopOf="@+id/btnHow" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+     <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true">
+
 
     <ImageButton
         android:id="@+id/imgbtnsuggest"
+        android:background="@drawable/review"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="20dp"
-        android:background="@drawable/review"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+       android:layout_alignParentStart="true"
+        />
+         <ImageButton
+             android:id="@+id/imgBtnSettings"
+             android:layout_width="40dp"
+             android:layout_height="40dp"
+             android:layout_marginTop="10dp"
+             android:background="@drawable/settings_gear"
+             android:layout_margin="20dp"
+android:layout_alignParentEnd="true"             />
+     </RelativeLayout>
+</RelativeLayout>

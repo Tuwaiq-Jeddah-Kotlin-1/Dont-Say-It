@@ -12,13 +12,12 @@ class AppLifeCycle : Application() {
         super.onCreate()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//check version(oreo and higher) cuz older ones require channel id?
-            val name = "Stock Notification"
+            val name = "Dont say it Game Notification"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance)
             val notificationManager: NotificationManager =
                 getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
-            //all of this is creating a notification channel
 
         }
 

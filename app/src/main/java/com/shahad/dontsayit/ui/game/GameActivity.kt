@@ -1,6 +1,5 @@
 package com.shahad.dontsayit.ui.game
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -16,15 +15,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.R
+import com.shahad.dontsayit.Util.checkConnection
+import com.shahad.dontsayit.data.model.Player
 import com.shahad.dontsayit.data.model.Word
 import com.shahad.dontsayit.data.network.ViewModel
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
     private lateinit var recyclerview: RecyclerView
     private lateinit var tvKeyword: TextView
     private lateinit var tvRoundTitle: TextView
-
-    // private lateinit var imgBtnPlayers: ImageButton
     private lateinit var imgBtnScore: ImageButton
     private lateinit var btnStart: ImageButton
     private lateinit var close: ImageButton
@@ -38,16 +37,11 @@ class GameActivity : AppCompatActivity() {
     private var roomName = ""
     private var hostName = ""
     private var role = ""
+    private lateinit var shuffled: List<String>
 
-    private val roomContentMap = mutableMapOf<String, String>()
-    private val playersMapWithWords = mutableMapOf<Int, MutableList<String>>()
-    private val playersStateListWithoutCurrentPlayer: MutableList<String> = mutableListOf()
-    private val playersPicListWithoutCurrentPlayer: MutableList<String> = mutableListOf()
-    private var listOfStateInPlayerName: MutableList<String> = mutableListOf()
-    private val playersScore: MutableList<Int> = mutableListOf()
-    private var playersListWithoutCurrentPlayer: List<String> = listOf()
+    private var playersListObj: MutableMap<String, Player> = mutableMapOf()
 
-    private var playersList: MutableList<String> = mutableListOf()
+
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var hostRef: DatabaseReference
     private lateinit var wordRef: DatabaseReference
@@ -63,7 +57,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var scoreListener: ChildEventListener
     private lateinit var stateListener: ChildEventListener
     private lateinit var profilePicListener: ChildEventListener
-    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +65,7 @@ class GameActivity : AppCompatActivity() {
         recyclerview.layoutManager = GridLayoutManager(this, 2)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         observeWord()
-        playersList = ArrayList()
-        listOfStateInPlayerName = ArrayList()
+
         preference = this.getSharedPreferences(PREFERENCE, MODE_PRIVATE)
         playerName = preference.getString(USERNAME, "") ?: ""
 
@@ -92,7 +84,6 @@ class GameActivity : AppCompatActivity() {
             btnStart.isVisible = false
         }
 
-        //roomRef = database.getReference("rooms")
         roomRef = database.getReference("rooms/$roomName")
         wordRef = database.getReference("rooms/${roomName}/players")
         stateRef = database.getReference("rooms/${roomName}/state")
@@ -101,31 +92,28 @@ class GameActivity : AppCompatActivity() {
         hostRef = database.getReference("rooms/${roomName}/host")
         scoreRef = database.getReference("rooms/${roomName}/score")
 
-        /* imgBtnPlayers.setOnClickListener {
-             playersListDialog()
-         }*/
 
         imgBtnScore.setOnClickListener {
             scoreDialog()
         }
 
-        btnStart.setOnClickListener {//show recycler view with random words,start timer
-
-            if (playersList.size < 2) {
+        btnStart.setOnClickListener {//show recycler view with random words
+if (checkConnection(this,viewModel.checkConnection(this))){
+            if (playersListObj.size < 2) {
                 Toast.makeText(this, "not enough players to start the game", Toast.LENGTH_LONG)
                     .show()
                 btnStart.isEnabled = true
                 btnStart.background =
                     ContextCompat.getDrawable(this, R.drawable.play_button)
 
-            }else{
+            } else {
                 assignWord()
                 addRoomEventListener()
             }
         }
         close.setOnClickListener {
             onBackPressed()
-        }
+        }}
 
         roundNumberObserver()
         addRoomEventListener()
@@ -139,86 +127,72 @@ class GameActivity : AppCompatActivity() {
 
     private fun roundNumberObserver() {
         viewModel.getRound(roundRef).observe(this, {
-            if (it.toInt()==0) {
+            if (it.toInt() == 0) {
                 tvRoundTitle.text = "Round"
-            }else{
+            } else {
                 tvRoundTitle.text = "${it.toInt()}"
 
             }
-        })
+        }
+
+        )
     }
 
     private fun scoreDialog() {
-        dialog = Dialog(this)
+        val dialog = Dialog(this)
         dialog.setContentView(R.layout.score_dialog)
         val recyclerviewScore: RecyclerView = dialog.findViewById(R.id.recyclerviewScore)
         recyclerviewScore.layoutManager = LinearLayoutManager(this)
-        recyclerviewScore.adapter = ScoreAdapter(playersList, playersScore)
+        recyclerviewScore.adapter = ScoreAdapter(playersListObj)
         dialog.show()
+    }
+
+    private fun resetState() {
+        viewModel.resetState(stateRef, playersListObj.keys).observe(this, {
+            Log.i("$playerName resetState $it", playersListObj.toString())
+
+        })
+    }
+
+    private fun shuffleWords() {
+        shuffled = if (preference.getString(LANG, "en") == "ar") {
+            arWordList.shuffled()
+        } else {
+            enWordList.shuffled()
+        }
     }
 
     private fun assignWord() {
 
         viewModel.getRound(roundRef).observe(this, {
             roundRef.setValue(it.toInt() + 1)
-            // tvRoundTitle.text = "Round ${it.toInt()+1}"
-        })
-        viewModel.resetState(stateRef, playersList).observe(this, {
-            val dataSnap = it
-            Log.i("dataSnap ", dataSnap.toString())
-
-            listOfStateInPlayerName.clear()
-            for (i in 0 until playersList.size) {
-                listOfStateInPlayerName.add(playersList[i])
-            }
-            Log.i("reset ", listOfStateInPlayerName.toString())
-
         })
 
-
-        val shuffled: List<String>
-        if (preference.getString(LANG, "en") == "ar") {
-            shuffled = arWordList.shuffled()
-        } else {
-            shuffled = enWordList.shuffled()
-        }
+        resetState()
+        shuffleWords()
 
 
         //send assigned map word/name to adapter and hide the player ones
-        //wordRef = database.getReference("rooms/${roomName}/players")
-        for (i in 0 until playersList.size) {
-            //if (stateRef.child(playersList[i]).get().result?.value=="in") {
-            wordRef.child(playersList[i]).setValue(shuffled[i])
-            //don't change word of out players
-            Log.i("new word", playersList[i])
-            //}
+
+        for (i in 0 until playersListObj.size) {
+
+            wordRef.child(playersListObj.keys.elementAt(i)).setValue(shuffled[i])
+            Log.i("new word", playersListObj.keys.elementAt(i))
+
         }
         btnStart.isEnabled = false
         btnStart.background =
             ContextCompat.getDrawable(this, R.drawable.gray_play_button)
     }
 
-    private fun playersListDialog() {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.player_list_dialog)
-        val listview: ListView = dialog.findViewById(R.id.listview)
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            playersList
-        )
-        //Log.i("player list", playersList.size.toString())
-
-        listview.adapter = adapter
-
-        dialog.show()
-    }
-
     fun endOfRoundDialog(winner: String) {
-        val endOfRoundDialog = AlertDialog.Builder(this)
-        endOfRoundDialog.setTitle("$winner Won!")
-        endOfRoundDialog.setMessage("better luck next round!")
-        endOfRoundDialog.show()
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.winner_dialog)
+        val title: TextView = dialog.findViewById(R.id.tvwinner)
+        val message: TextView = dialog.findViewById(R.id.tvmessage)
+        title.text = "$winner Won!"
+        message.text = "better luck next round!"
+        dialog.show()
         btnStart.isEnabled = true
         btnStart.background =
             ContextCompat.getDrawable(this, R.drawable.play_button)
@@ -228,24 +202,21 @@ class GameActivity : AppCompatActivity() {
         recyclerview = findViewById(R.id.recyclerview)
         tvKeyword = findViewById(R.id.tvRoomKey)
         tvRoundTitle = findViewById(R.id.tvRoundTitle)
-        // imgBtnPlayers = findViewById(R.id.imgbtnplayers)
         imgBtnScore = findViewById(R.id.imgbtnscore)
         btnStart = findViewById(R.id.btnStart)
         close = findViewById(R.id.close)
-        //  btnReset = findViewById(R.id.btnReset)
     }
 
     override fun onBackPressed() {
-
+        super.onBackPressed()
         Log.d("onBack", "Fragment back pressed invoked")
-        // roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
 
         if (playerName == hostName) {
             deleteRoom()
         } else {
             playerLeft()
         }
-        super.onBackPressed()
+
     }
 
     private fun deleteRoom() {
@@ -254,17 +225,14 @@ class GameActivity : AppCompatActivity() {
         hostRef.setValue("gone")
         roomRef = database.getReference("rooms/${roomName}")
         roomRef.removeValue()//room
+
     }
 
     private fun playerLeft() {
-        //  roomRef = database.getReference("rooms/${roomName}/players/${playerName}")
-        // roomRef.removeValue()//player
         wordRef.child(playerName).removeValue()//player
-
-        //    roomRef = database.getReference("rooms/${roomName}/state/${playerName}")
         stateRef.child(playerName).removeValue()//state
-        //    roomRef = database.getReference("rooms/${roomName}/score/${playerName}")
         scoreRef.child(playerName).removeValue()//score
+        picRef.child(playerName).removeValue()//pic
         addToPlayersNum()//add one to players number
     }
 
@@ -272,14 +240,7 @@ class GameActivity : AppCompatActivity() {
         roomRef = database.getReference("rooms/${roomName}/playersNum")
         roomRef.get().addOnCompleteListener {
             it.addOnSuccessListener { num ->
-                //Log.i("players number ", num.value.toString())
-
                 roomRef.setValue(num.value.toString().toInt() + 1)
-                //Log.i("players number IF", "YOU'RE OUT")
-
-            }
-            it.addOnFailureListener { e ->
-                //Log.i("players number", e.message.toString())
             }
         }
     }
@@ -288,74 +249,26 @@ class GameActivity : AppCompatActivity() {
         roomListener = roomRef.addChildEventListener(object : ChildEventListener {
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                //     if (snapshot.key != playerName && snapshot.key != "message") {
-                roomContentMap[snapshot.key!!] = snapshot.value.toString()
-                //   }
-                // playersList.add(map.toString())
-                //   //Log.i("Map", playerMapWord.toString())
-
-                /*  if (snapshot.key=="score"){
-                      // playersScore[playersList.indexOf(snapshot.key)] = snapshot.value.toString().toInt()
-                       Log.e("score ", snapshot.toString())
-                      *//* Log.e("key ", snapshot.key.toString())
-                     Log.e("value ", snapshot.value.toString())*//*
-                    val dbscorelist= snapshot.value as String
-                    val list= dbscorelist.split(",")
-                    Log.e("dbscorelist ", dbscorelist.toString())
-                }*/
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                //    if (snapshot.key != playerName && snapshot.key != "message") {
-                roomContentMap[snapshot.key!!] = snapshot.value.toString()
-                //    }
-/*
-
-                Log.e("onChildChanged ", snapshot.toString())*/
-                /*  Log.e("key ", snapshot.key.toString())
-                  Log.e("value ", snapshot.value.toString())*/
-
-
                 if (snapshot.key == "round") {
                     roundNumberObserver()
-                    Log.e("round ", snapshot.toString())
                 }
-
-                /*   if (snapshot.key=="score"){
-                       val dbscorelist= snapshot.key as List<String>
-                    // playersScore[playersList.indexOf(snapshot.key)] = snapshot.value.toString().toInt()
-                       Log.e("dbscorelist ", dbscorelist.toString())
-                       Log.e("score ", snapshot.toString())
-                   }*/
-
-                //playersList.add(map.toString())
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                //      if (snapshot.key != playerName) {
-                roomContentMap.remove(snapshot.key!!)
-                //      }
-//                playersList.add(map.toString())
-
 
                 if (snapshot.key == "host") {//if host left and deleted "host" key
                     Toast.makeText(this@GameActivity, "Host closed the lobby", Toast.LENGTH_LONG)
                         .show()
-
-                    /* if (dialog.isShowing) {//lateinit property dialog has not been initialized
-                         dialog.dismiss()
-                     }*/
 
                     finish()
                 }
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                //   if (snapshot.key != playerName && snapshot.key != "message") {
-                roomContentMap[snapshot.key!!] = snapshot.value.toString()
-                //   }
-//                playersList.add(map.toString())
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -370,26 +283,10 @@ class GameActivity : AppCompatActivity() {
     private fun addPlayersListener() {
         playersListener = wordRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                playersList.add(snapshot.key.toString())
-                playersScore.add(0)
 
-                Log.i("playersList ADD", playersList.toString())
-                Log.i("playersScore ADD", playersScore.toString())
-                listOfStateInPlayerName.add(snapshot.key.toString())
-                playersListWithoutCurrentPlayer = playersList.minus(playerName)
-
-                if (snapshot.key != playerName) {
-                    playersStateListWithoutCurrentPlayer.add(
-                        playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()), "in"
-
-
-                    )
-                    Log.i(
-                        "playersStateListWithoutCurrentPlayer ADD",
-                        playersStateListWithoutCurrentPlayer.toString()
-                    )
-
-                }
+                playersListObj[snapshot.key.toString()] =
+                    Player(snapshot.key.toString(), "in", 0)//nedd to add word and pic
+                Log.i("$playerName playersListObj addPlayersListener", playersListObj.toString())
 
                 if (hostName == playerName) {
                     btnStart.isEnabled = true
@@ -403,54 +300,19 @@ class GameActivity : AppCompatActivity() {
                 previousChildName: String?
             ) {//this gets activated when a player leave
 
-
-                if (snapshot.key != playerName) {
-                    playersMapWithWords[playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString())] =
-                        mutableListOf(snapshot.key.toString(), snapshot.value.toString())
-
-                }
-
-
+                playersListObj[snapshot.key.toString()]!!.word = snapshot.value.toString()
+                Log.i("$playerName playersListObj addPlayersListener", playersListObj.toString())
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                playersScore.removeAt(playersList.indexOf(snapshot.key))
-                playersList.remove(snapshot.key.toString())
-                listOfStateInPlayerName.remove(snapshot.key.toString())
-                playersMapWithWords.remove(playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()))
-                if (snapshot.key != playerName) {
-                    playersStateListWithoutCurrentPlayer.removeAt(
-                        playersListWithoutCurrentPlayer.indexOf(
-                            snapshot.key.toString()
-                        )
-                    )//java.lang.ArrayIndexOutOfBoundsException: length=10; index=-1
-
-                    playersPicListWithoutCurrentPlayer.removeAt(
-                        playersListWithoutCurrentPlayer.indexOf(
-                            snapshot.key.toString()
-                        )
-                    )
-                }
-                /* Log.i(
-                     "INDEX ERROR playerMapState $playerName=${snapshot.key}",
-                     playersStateListWithoutCurrentPlayer.toString()
-                 )
-                 Log.i(
-                     "INDEX ERROR shortenList $playerName=${snapshot.key}",
-                     playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()).toString()
-                 )*/
-
                 recyclerview.adapter!!.notifyItemRemoved(
-                    playersListWithoutCurrentPlayer.indexOf(
+                    playersListObj.minus(playerName).keys.indexOf(
                         snapshot.key.toString()
                     )
                 )
-                playersListWithoutCurrentPlayer = playersList.minus(playerName)
-
-
-                //Toast.makeText(this@GameActivity, "${snapshot.key} just left", Toast.LENGTH_LONG).show()
                 if (snapshot.key == playerName) {//player left
                     finish()
+
                 }
 
             }
@@ -482,13 +344,11 @@ class GameActivity : AppCompatActivity() {
             //when button clicked words changes and this is activated
             override fun onDataChange(snapshot: DataSnapshot) {
                 //change received
-                //   Log.i("addWordEventListener", snapshot.toString())
+                playersListObj[snapshot.key]?.word = snapshot.value.toString()
+                //  playersListObj[snapshot.key]?.state = "in"// when new words generated change state to in
+                Log.i("$playerName playersListObj addWordEventListener", playersListObj.toString())
                 recyclerview.adapter = GameAdapter(
-                    playersMapWithWords,
-                    roomName,
-                    playerName,
-                    playersStateListWithoutCurrentPlayer,
-                    playersPicListWithoutCurrentPlayer,
+                    playersListObj.minus(playerName),
                     this@GameActivity
                 )
 
@@ -496,15 +356,6 @@ class GameActivity : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {
                 //error = retry
-                recyclerview.adapter = GameAdapter(
-                    playersMapWithWords,
-                    roomName,
-                    playerName,
-                    playersStateListWithoutCurrentPlayer,
-                    playersPicListWithoutCurrentPlayer,
-                    this@GameActivity
-                )
-
             }
 
         })
@@ -513,126 +364,53 @@ class GameActivity : AppCompatActivity() {
     private fun addStateEventListener() {
         stateListener = stateRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-
-                /*if (snapshot.key != playerName) {
-                    playersStateListWithoutCurrentPlayer.add(
-                        playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()),
-                        snapshot.value.toString()
-                    )*/
-
-                //}
-                //   Log.i("playerMapWord state", playersStateListWithoutCurrentPlayer.toString())
-
-                //   Log.i("state", snapshot.toString())
-                Log.e(
-                    "$playerName after state onChildAdded PLAYERS",
-                    playersListWithoutCurrentPlayer.toString()
-                )
-                Log.e(
-                    "$playerName after state onChildAdded",
-                    playersStateListWithoutCurrentPlayer.toString()
-                )
-
                 recyclerview.adapter = GameAdapter(
-                    playersMapWithWords,
-                    roomName,
-                    playerName,
-                    playersStateListWithoutCurrentPlayer,
-                    playersPicListWithoutCurrentPlayer,
+                    playersListObj.minus(playerName),
                     this@GameActivity
                 )
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
 
-                if (snapshot.key != playerName) {
-                    playersStateListWithoutCurrentPlayer[playersListWithoutCurrentPlayer.indexOf(
-                        snapshot.key.toString()
-                    )] =
-                        snapshot.value.toString()
-                    //   Log.i("playerMapWord state", playersStateListWithoutCurrentPlayer.toString())
+                playersListObj[snapshot.key.toString()]!!.state = snapshot.value.toString()
+                Log.i("$playerName playersListObj addStateEventListener", playersListObj.toString())
 
-                }
+                if (playersListObj.values.none { it.state == "winner" }&&snapshot.value!="in") {
+                    var remainingPlayer = playersListObj.filter {
 
-                //if change to out delete player name
-                if (snapshot.value == "out") {
-                    listOfStateInPlayerName.remove(snapshot.key.toString())
-                }
+                        it.value.state == "in"
+                    }
+                    remainingPlayer.values.forEach {
+                        Log.i("$playerName remainingPlayer", "${it.name} = ${it.state}")
+                    }
 
-                //if change to in add player name back
-                if (snapshot.value == "in") {
-                    listOfStateInPlayerName.add(snapshot.key.toString())
-                }
-                //if length of listOfInPlayers is one declare winner
-                if (listOfStateInPlayerName.size == 1) {
-                    stateRef.child(listOfStateInPlayerName[0]).setValue("winner")
-                }
-
-                if (snapshot.value == "winner") {
-                    //   recyclerview.isClickable = false
-                    // Toast.makeText(this@GameActivity,"winner is ${snapshot.key}",Toast.LENGTH_SHORT).show()
-                    endOfRoundDialog(snapshot.key.toString())
-
-                    Log.e(
-                        "${playerName} winner ",
-                        scoreRef.child(snapshot.key.toString()).toString()
-                    )
+                    if (remainingPlayer.size == 1) {
+                        Log.i("winner", "$playerName found ${remainingPlayer.keys.first()} winner")
+                        if (playerName == hostName) {
+                            stateRef.child(remainingPlayer.keys.first()).setValue("winner")
+                            increaseScore(remainingPlayer.keys.first())
+                        }
+                        playersListObj[remainingPlayer.keys.first()]!!.state = "winner"
 
 
-                    viewModel.getScore(scoreRef.child(listOfStateInPlayerName[0])).observe(
-                        this@GameActivity, {
-                            //   Log.i("$hostName guest ", it.toString())
+                        endOfRoundDialog(remainingPlayer.keys.first())
 
-                            if (hostName == playerName) {
-                                //   Log.i("Host ", it.toString())
-                                scoreRef.child(listOfStateInPlayerName[0]).setValue(it.toInt() + 1)
-                                //   Log.i("Host ", it.toString())
-                                //  playersScore[playersList.indexOf(snapshot.key)] = it.toInt() + 1
-
-                            }
-                        })
-
+                    }
                 }
 
 
-                //check state list if these one in
-                //declare winner
-                //make start btn enabled
 
-                Log.e(
-                    "$playerName after state onChildChanged PLAYERS",
-                    playersListWithoutCurrentPlayer.toString()
-                )
-                Log.e(
-                    "$playerName after state onChildChanged",
-                    playersStateListWithoutCurrentPlayer.toString()
-                )
 
-                //  Log.i("state", snapshot.toString())
+
+
                 recyclerview.adapter = GameAdapter(
-                    playersMapWithWords,
-                    roomName,
-                    playerName,
-                    playersStateListWithoutCurrentPlayer,
-                    playersPicListWithoutCurrentPlayer,
+                    playersListObj.minus(playerName),
                     this@GameActivity
+
                 )
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                //       Log.i("state", snapshot.toString())
-                //playersStateListWithoutCurrentPlayer.remove(snapshot.value.toString())
-                Log.e(
-                    "$playerName before state onChildRemoved PLAYERS",
-                    playersListWithoutCurrentPlayer.toString()
-                )
-
-                //     playersStateListWithoutCurrentPlayer.remove(snapshot.value.toString())
-                Log.e(
-                    "$playerName after state onChildRemoved",
-                    playersStateListWithoutCurrentPlayer.toString()
-                )
 
 
             }
@@ -648,16 +426,20 @@ class GameActivity : AppCompatActivity() {
         })
     }
 
- private fun addPicEventListener() {
+    private fun increaseScore(player: String) {
+        viewModel.getScore(scoreRef.child(player)).observe(this@GameActivity, {
+            if (hostName == playerName) {
+                scoreRef.child(player).setValue(it.toInt() + 1)
+            }
+
+        })
+    }
+
+    private fun addPicEventListener() {
         profilePicListener = picRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-             if (playerName!=snapshot.key) {
-                 Log.e("$playerName add pic for ${snapshot.key}","with value of ${snapshot.value}")
-                 playersPicListWithoutCurrentPlayer.add(
-                     playersListWithoutCurrentPlayer.indexOf(snapshot.key.toString()),
-                     snapshot.value.toString()
-                 )
-             }
+                playersListObj[snapshot.key]!!.pic = snapshot.value.toString()
+                Log.i("$playerName playersListObj addPicEventListener", playersListObj.toString())
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -687,7 +469,8 @@ class GameActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                playersScore[playersList.indexOf(snapshot.key)] = snapshot.value.toString().toInt()
+                playersListObj[snapshot.key]!!.score = snapshot.value.toString().toInt()
+                Log.i("$playerName playersListObj addScoreEventListener", playersListObj.toString())
 
             }
 
@@ -708,35 +491,25 @@ class GameActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i("onDestroy", "GameActivity removingListeners")
+
         if (this::roomRef.isInitialized) {
             roomRef.removeEventListener(roomListener)
-            Log.i("onDestroy Home", "roomRef isInitialized")
-
         }
         if (this::wordRef.isInitialized) {
             wordRef.removeEventListener(playersListener)
-            Log.i("onDestroy Game", "wordRef isInitialized")
-
         }
         if (this::wordRef.isInitialized) {
             wordRef.removeEventListener(wordListener)
-            Log.i("onDestroy Game", "wordRef isInitialized")
-
         }
         if (this::scoreRef.isInitialized) {
             scoreRef.removeEventListener(scoreListener)
-            Log.i("onDestroy Game", "scoreRef isInitialized")
-
         }
         if (this::stateRef.isInitialized) {
             stateRef.removeEventListener(stateListener)
-            Log.i("onDestroy Game", "stateRef isInitialized")
-
         }
-    if (this::picRef.isInitialized) {
-        picRef.removeEventListener(profilePicListener)
-            Log.i("onDestroy Game", "picRef isInitialized")
-
+        if (this::picRef.isInitialized) {
+            picRef.removeEventListener(profilePicListener)
         }
         //viewModel.getRound().removeObserver()
 
@@ -744,4 +517,24 @@ class GameActivity : AppCompatActivity() {
 
 
     }
+
+    override fun onItemClick(item: Player?) {
+        item?.let {
+            if (playersListObj.values.none { it.state == "winner" }) {
+
+                if (item.state == "in") {
+                    stateRef.child(item.name).setValue("out")
+                    playersListObj[item.name]!!.state = "out"
+                    Log.i("$playerName onItemClick", "out")
+
+                }else if (item.state == "out") {//in case winner or out,  maybe make winner unchangeable
+                    stateRef.child(item.name).setValue("in")
+                    playersListObj[item.name]!!.state = "in"
+                    Log.i("$playerName onItemClick", "in")
+                }
+                recyclerview.adapter!!.notifyItemChanged(playersListObj.keys.indexOf(item.name))
+            }
+        }
+    }
 }
+

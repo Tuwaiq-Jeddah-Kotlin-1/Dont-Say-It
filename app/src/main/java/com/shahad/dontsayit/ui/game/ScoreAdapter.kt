@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shahad.dontsayit.R
+import com.shahad.dontsayit.data.model.Player
 
-class ScoreAdapter(private val playersList: List<String>, private val ScoreList: List<Int>) :
+class ScoreAdapter(private val playersList: MutableMap<String, Player>) :
     RecyclerView.Adapter<ScoreAdapter.ItemAdapter>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreAdapter.ItemAdapter {
         val view =
@@ -17,15 +18,15 @@ class ScoreAdapter(private val playersList: List<String>, private val ScoreList:
     }
 
     override fun onBindViewHolder(holder: ItemAdapter, position: Int) {
-        val sortedScore = ScoreList.sorted()
+        val sortedList = playersList.keys.sorted()
         holder.num.text = "${position + 1}."
 
-        holder.playerName.text = playersList[position]//username
-        holder.score.text = ScoreList[position].toString()//score
+        holder.playerName.text = sortedList.elementAt(position)//username
+        holder.score.text = playersList[sortedList.elementAt(position)]!!.score.toString()//score
     }
 
     override fun getItemCount(): Int {
-        return ScoreList.size
+        return playersList.size
     }
 
     inner class ItemAdapter(itemView: View) : RecyclerView.ViewHolder(itemView) {
