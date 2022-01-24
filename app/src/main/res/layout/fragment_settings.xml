@@ -176,7 +176,7 @@
         style="@style/subTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="15dp"
         android:text="Appearance"
         app:layout_constraintTop_toBottomOf="@id/view2" />
 
@@ -184,7 +184,7 @@
         android:id="@+id/langRelative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvappearance">
 

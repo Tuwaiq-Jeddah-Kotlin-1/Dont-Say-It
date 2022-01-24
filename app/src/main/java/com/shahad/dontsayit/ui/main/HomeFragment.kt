@@ -13,33 +13,35 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.*
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.R
+import com.shahad.dontsayit.Util.checkConnection
 import com.shahad.dontsayit.data.model.UserSuggestions
 import com.shahad.dontsayit.data.network.ViewModel
 import com.shahad.dontsayit.ui.game.GameActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeFragment : Fragment() {
     private lateinit var btnCreateLobby: ImageButton
     private lateinit var btnJoinLobby: ImageButton
     private lateinit var btnHow: ImageButton
-    private lateinit var imgBtnShare: ImageButton
     private lateinit var imgbtnsuggest: ImageButton
     private lateinit var imgBtnSettings: ImageButton
-    private val appUrl = "https://github.com/Tuwaiq-Jeddah-Kotlin-1/Dont-Say-It"
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var viewModel: ViewModel
     private lateinit var shake: Animation
     private lateinit var scaleUp: Animation
     private lateinit var scaleDown: Animation
-    private val clipboard: ClipboardManager by lazy { requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager }
+    private val clipboard: ClipboardManager by lazy {
+        requireContext().getSystemService(
+            CLIPBOARD_SERVICE
+        ) as ClipboardManager
+    }
     private var playerName = ""
     private var profilePic = ""
     private var roomName = ""
@@ -71,36 +73,39 @@ class HomeFragment : Fragment() {
 
         roomsRef = database.getReference("rooms")
 
+
+
         btnCreateLobby.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnCreateLobby.startAnimation(scaleDown)
                 delay(100)
 
-
-                if (viewModel.checkConnection(requireContext())) {
+                if (checkConnection(
+                        requireContext(),
+                        viewModel.checkConnection(requireContext())
+                    )
+                )  {
                     createRoomDialog()
-                } else {
-                    Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT)
-                        .show()
                 }
 
             }
         }
         btnJoinLobby.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnJoinLobby.startAnimation(scaleDown)
                 delay(100)
 
-                if (viewModel.checkConnection(requireContext())) {
+                if (checkConnection(
+                        requireContext(),
+                        viewModel.checkConnection(requireContext())
+                    )
+                ) {
                     joinRoomDialog()
-                } else {
-                    Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT)
-                        .show()
                 }
             }
         }
         btnHow.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnHow.startAnimation(scaleDown)
                 delay(100)
                 findNavController().navigate(R.id.action_homeFragment_to_howToPlayFragment)
@@ -108,40 +113,30 @@ class HomeFragment : Fragment() {
             }
         }
         imgbtnsuggest.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 imgbtnsuggest.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
-                if (viewModel.checkConnection(requireContext())) {
+                if (checkConnection(
+                        requireContext(),
+                        viewModel.checkConnection(requireContext())
+                    )
+                ) {
                     suggestionDialog()
-                } else {
-                    Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT)
-                        .show()
                 }
             }
         }
         imgBtnSettings.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 imgBtnSettings.startAnimation(scaleUp)
                 delay(100)
                 findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
             }
         }
-        /* imgBtnShare.setOnClickListener {
-             GlobalScope.async(Dispatchers.Main) {
-                 imgBtnShare.startAnimation(scaleDown)
-                 // btnCreateLobby.startAnimation(bounce)
-                 delay(100)
 
-                 val intent = Intent(Intent.ACTION_SEND)
-                 intent.putExtra(Intent.EXTRA_TEXT, appUrl)//change to url
-                 intent.type = "text/plain"
-                 startActivity(intent)
-             }
-         }*/
         addRoomsEventListener()
     }
+
 
     private fun suggestionDialog() {
         val dialog = Dialog(requireContext())
@@ -150,9 +145,8 @@ class HomeFragment : Fragment() {
         val btnSuggest: ImageButton = dialog.findViewById(R.id.btnSuggestion)
 
         btnSuggest.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnSuggest.startAnimation(scaleDown)
-                // btnCreateLobby.startAnimation(bounce)
                 delay(100)
 
                 if (etSuggest.text.toString().isNotEmpty()) {
@@ -181,7 +175,6 @@ class HomeFragment : Fragment() {
         btnCreateLobby = view.findViewById(R.id.btnCreateLobby)
         btnJoinLobby = view.findViewById(R.id.btnJoinLobby)
         btnHow = view.findViewById(R.id.btnHow)
-//        imgBtnShare = view.findViewById(R.id.imgBtnShare)
         imgBtnSettings = view.findViewById(R.id.imgBtnSettings)
         imgbtnsuggest = view.findViewById(R.id.imgbtnsuggest)
         shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
@@ -245,7 +238,7 @@ class HomeFragment : Fragment() {
             chosen = numPicker.value
         }
         btnCreate.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnCreate.startAnimation(scaleDown)
                 delay(100)
 
@@ -273,7 +266,7 @@ class HomeFragment : Fragment() {
             }
         }
         btncopy.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btncopy.startAnimation(scaleDown)
                 delay(100)
 
@@ -283,7 +276,7 @@ class HomeFragment : Fragment() {
             }
         }
         btnshare.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnshare.startAnimation(scaleDown)
                 delay(100)
                 val intent = Intent(Intent.ACTION_SEND)
@@ -306,7 +299,7 @@ class HomeFragment : Fragment() {
         var btnPaste: ImageButton = dialog.findViewById(R.id.btnPaste)
 
         btnJoin.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnJoin.startAnimation(scaleDown)
                 // btnCreateLobby.startAnimation(bounce)
                 delay(100)
@@ -328,7 +321,7 @@ class HomeFragment : Fragment() {
             }
         }
         btnPaste.setOnClickListener {
-            GlobalScope.async(Dispatchers.Main) {
+            lifecycleScope.launch {
                 btnPaste.startAnimation(scaleDown)
                 delay(100)
                 val clipData: ClipData? = clipboard.primaryClip
@@ -370,16 +363,13 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i("onDestroy", "removingListeners")
+        Log.i("onDestroy", "HomeFragment removingListeners")
         if (this::roomRef.isInitialized) {
             roomRef.removeEventListener(roomListener)
-            Log.i("onDestroy", "roomRef isInitialized")
 
         }
         if (this::roomsRef.isInitialized) {
             roomsRef.removeEventListener(roomsListener)
-            Log.i("onDestroy", "roomsRef isInitialized")
-
         }
     }
 
@@ -436,11 +426,12 @@ class HomeFragment : Fragment() {
     private fun saveToAPI(value: String) {
         val suggestions = UserSuggestions()
         suggestions.suggestion = value
+        if (checkConnection(requireContext(),viewModel.checkConnection(requireContext()))){
         viewModel.userRequests(suggestions)
         Toast.makeText(
             context,
             "Thank you for being a part of this game \uD83E\uDD73",
             Toast.LENGTH_LONG
         ).show()
-    }
+    }}
 }

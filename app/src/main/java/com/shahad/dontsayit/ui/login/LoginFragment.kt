@@ -6,14 +6,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.shahad.dontsayit.R
+import com.shahad.dontsayit.Util.checkConnection
 import com.shahad.dontsayit.checkIfEmpty
 import com.shahad.dontsayit.data.network.ViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -25,6 +31,7 @@ class LoginFragment : Fragment() {
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: ImageButton
     private lateinit var btnRegister: TextView
+    private lateinit var scaleDown: Animation
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,18 +46,22 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
         btnLogin.setOnClickListener {
-            if (viewModel.checkConnection(requireContext())) {
+            lifecycleScope.launch {
+                btnLogin.startAnimation(scaleDown)
+                delay(100)
+            if (checkConnection(
+                    requireContext(),
+                    viewModel.checkConnection(requireContext())
+                )
+            ){
                 if (sendToCheck()) {
                     viewModel.signIn(
                         etEmail.text.toString().trim(),
                         etPassword.text.toString().trim(), findNavController()
                     )
                 }
-            }else{
-                Toast.makeText(requireContext(), "No Internet Connect", Toast.LENGTH_SHORT).show()
-
             }
-        }
+        }}
 
         btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
@@ -63,6 +74,7 @@ class LoginFragment : Fragment() {
         etPassword = view.findViewById(R.id.etPassword)
         btnLogin = view.findViewById(R.id.btnLogin)
         btnRegister = view.findViewById(R.id.btnRegister)
+        scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
 
     }
 

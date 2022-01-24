@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,14 +16,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.shahad.dontsayit.PIC
 import com.shahad.dontsayit.PREFERENCE
 import com.shahad.dontsayit.R
-import com.shahad.dontsayit.data.model.ProfilePicture
 import com.shahad.dontsayit.data.network.ViewModel
 
 class BottomSheetProfilePictures : BottomSheetDialogFragment(), PictureAdapter.ItemListener {
     private lateinit var recyclerview: RecyclerView
     private lateinit var viewModel: ViewModel
     private lateinit var sharedPreferences: SharedPreferences
-
+    private var data: Array<String>? = null
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
     override fun onCreateView(
@@ -36,29 +34,22 @@ class BottomSheetProfilePictures : BottomSheetDialogFragment(), PictureAdapter.I
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerview = view.findViewById(R.id.recyclerviewprofile)//
+        recyclerview = view.findViewById(R.id.recyclerviewprofile)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         sharedPreferences = requireActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE)
-
         recyclerview.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)//
-
-
-
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val args: BottomSheetProfilePicturesArgs by navArgs()
         args.let {
-
             recyclerview.adapter = PictureAdapter(args.picUrlList, this)
+            data = args.signupdata
         }
-
-
     }
 
     override fun onItemClick(item: String?) {
         item?.let {
             //save in db
-            Toast.makeText(requireContext(), "it: $it", Toast.LENGTH_LONG).show()
             //send it back to saved or updated setting or sign up
             sharedPreferences.edit().putString(PIC, it).apply()
             if (FirebaseAuth.getInstance().currentUser != null) {//in case of settings update user
@@ -68,9 +59,11 @@ class BottomSheetProfilePictures : BottomSheetDialogFragment(), PictureAdapter.I
             } else {// in case of sign up send it back
                 val action =
                     BottomSheetProfilePicturesDirections.actionBottomSheetProfilePicturesToSignupFragment(
-                        it
+                        it,
+                        data
                     )
                 findNavController().navigate(action)
+
             }
 
         }

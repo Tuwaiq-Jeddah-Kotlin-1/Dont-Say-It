@@ -16,7 +16,12 @@
         android:theme="@style/Theme.DontSayIt">
 
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.game.GameActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -24,20 +29,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.game.GameActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
-        <!--
-            android:windowSoftInputMode="stateHidden"
--->
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-
         </activity>
     </application>
 

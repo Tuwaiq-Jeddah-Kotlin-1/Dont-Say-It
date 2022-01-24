@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/howToPlayFragment"
@@ -13,7 +13,7 @@
         <action
             android:id="@+id/action_howToPlayFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@+id/nav_graph"
+            app:popUpTo="@+id/homeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment
@@ -24,7 +24,7 @@
         <action
             android:id="@+id/action_settingsFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@+id/nav_graph"
+            app:popUpTo="@+id/homeFragment"
             app:popUpToInclusive="true"/>
         <argument
             android:name="user"
@@ -40,7 +40,7 @@
         <action
             android:id="@+id/action_settingsFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@+id/nav_graph"
+            app:popUpTo="@+id/homeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment
@@ -54,7 +54,7 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@+id/nav_graph"
+            app:popUpTo="@+id/homeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment
@@ -68,7 +68,7 @@
         <action
             android:id="@+id/action_signupFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@+id/nav_graph"
+            app:popUpTo="@+id/homeFragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_signupFragment_to_bottomSheetProfilePictures"
@@ -78,6 +78,11 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
+        <argument
+            android:name="signupdata"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -108,6 +113,27 @@
         <action
             android:id="@+id/action_bottomSheetProfilePictures_to_signupFragment"
             app:destination="@id/signupFragment" />
+        <argument
+            android:name="signupdata"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.shahad.dontsayit.ui.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 </navigation>

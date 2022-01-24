@@ -13,9 +13,11 @@ class WorkerNotification(private val context: Context, workParams: WorkerParamet
     override fun doWork(): Result {
         val notification =
             NotificationCompat.Builder(context, CHANNEL_ID).setTicker(NOTIFICATION_NAME)
-                .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                .setContentTitle(NOTIFICATION_NAME)
-                .setContentText("")
+
+               // .setSmallIcon(android.R.drawable.ic_dialog_alert)
+               // .setLargeIcon()
+                .setContentTitle("Shhhh")
+                .setContentText("come play..")
                 .setAutoCancel(true)//when we click it, it gets dismissed
                 .build()
         //create notification manager

@@ -27,78 +27,103 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-<com.google.android.material.textfield.TextInputLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/keywordlayout"
-    style="@style/OutlinedRoundedBox"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:layout_marginStart="20dp">
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/keyword"
-        style="@style/text18"
-        android:textAlignment="center"
-        android:layout_width="170dp"
-        android:layout_height="match_parent"
-        android:hint="@string/lobby_keyword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</com.google.android.material.textfield.TextInputLayout>
-    <LinearLayout
-        android:id="@+id/linear"
+
+    <TextView
+        android:id="@+id/tvPlayers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
-        android:orientation="vertical"
+        android:fontFamily="@font/tajawal_medium"
+        android:text="@string/players"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <TextView
+        android:id="@+id/tvcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/tajawal_medium"
+        android:text="game code"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/guideline4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/btnJoin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/keywordlayout"
-        app:layout_constraintTop_toBottomOf="@id/dialogHeader">
-
-        <TextView
-            android:id="@+id/tvPlayers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/tajawal_medium"
-            android:gravity="center_vertical"
-            android:text="@string/players"
-            android:textSize="16sp" />
+        app:layout_constraintStart_toEndOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/tvPlayers">
 
         <NumberPicker
             android:id="@+id/numberPicker"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp" />
-    </LinearLayout>
+            android:layout_marginTop="20dp" />
+    </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/imgBtnShare"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="5dp"
-        android:contentDescription="@string/contentDescription_share"
-        android:background="@drawable/share_sec"
-        app:layout_constraintStart_toEndOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@id/keywordlayout" />
+    <RelativeLayout
+        android:id="@+id/relative2"
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/btnJoin"
+        app:layout_constraintEnd_toStartOf="@id/guideline4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvcode">
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/keywordlayout"
+            style="@style/OutlinedRoundedBox"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true">
 
-    <ImageButton
-        android:id="@+id/btnCopy"
-        android:layout_width="25dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="5dp"
-        android:background="@drawable/copy"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@id/keywordlayout" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/keyword"
+                style="@style/text18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/lobby_keyword"
+                android:textAlignment="center" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/keywordlayout"
+            android:layout_centerHorizontal="true">
+
+            <ImageButton
+                android:id="@+id/imgBtnShare"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/share_sec"
+                android:contentDescription="@string/contentDescription_share" />
+
+            <ImageButton
+                android:id="@+id/btnCopy"
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/copy" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/btnJoin"
@@ -122,19 +147,11 @@
         app:layout_constraintTop_toTopOf="@+id/btnJoin" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@id/keywordlayout"
-        app:layout_constraintEnd_toEndOf="@id/keywordlayout"
-        app:layout_constraintGuide_percent="0.83094555" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2214112" />
+        android:visibility="visible"
+        app:layout_constraintGuide_percent="0.63" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

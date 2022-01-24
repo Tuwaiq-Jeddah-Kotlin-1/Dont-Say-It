@@ -18,11 +18,5 @@ interface MockAPI {
     @POST("userRequests")
     suspend fun userRequests(@Body gameValue: UserSuggestions)
 
-    @GET("profilePic/:id")
-    suspend fun getUserProfilePic(@Query("query") id: String): ProfilePicture
 
-
-    /*@POST("users")
-    suspend fun addUser(@Body user: User): User
-*/
 }

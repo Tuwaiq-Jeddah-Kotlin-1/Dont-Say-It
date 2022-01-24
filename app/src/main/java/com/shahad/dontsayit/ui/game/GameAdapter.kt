@@ -68,11 +68,7 @@ class GameAdapter(
 
         override fun onClick(v: View) {
             mListener?.onItemClick(item)
-           /* if (itemBinding.redx.visibility == 0) {//visiable
-                itemBinding.redx.visibility = View.INVISIBLE
-            } else {
-                itemBinding.redx.visibility = View.VISIBLE
-            }*/
+
         }
     }
 }

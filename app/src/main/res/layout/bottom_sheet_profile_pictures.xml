@@ -9,15 +9,6 @@
     android:orientation="vertical"
     tools:context=".ui.BottomSheetProfilePictures"
     tools:viewBindingIgnore="true">
-   <!-- <TextView
-        android:id="@+id/top"
-        android:layout_width="150dp"
-        android:layout_height="10dp"
-        android:layout_marginTop="5dp"
-        android:background="#f0f0f0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="40dp"

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import com.shahad.dontsayit.*
 import com.shahad.dontsayit.R
+import com.shahad.dontsayit.Util.checkConnection
 import com.shahad.dontsayit.data.model.Player
 import com.shahad.dontsayit.data.model.Word
 import com.shahad.dontsayit.data.network.ViewModel
@@ -64,8 +65,7 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
         recyclerview.layoutManager = GridLayoutManager(this, 2)
         viewModel = ViewModelProvider(this)[ViewModel::class.java]
         observeWord()
-        /* playersList = ArrayList()
-         listOfStateInPlayerName = ArrayList()*/
+
         preference = this.getSharedPreferences(PREFERENCE, MODE_PRIVATE)
         playerName = preference.getString(USERNAME, "") ?: ""
 
@@ -97,8 +97,8 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
             scoreDialog()
         }
 
-        btnStart.setOnClickListener {//show recycler view with random words,start timer
-
+        btnStart.setOnClickListener {//show recycler view with random words
+if (checkConnection(this,viewModel.checkConnection(this))){
             if (playersListObj.size < 2) {
                 Toast.makeText(this, "not enough players to start the game", Toast.LENGTH_LONG)
                     .show()
@@ -113,7 +113,7 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
         }
         close.setOnClickListener {
             onBackPressed()
-        }
+        }}
 
         roundNumberObserver()
         addRoomEventListener()
@@ -491,35 +491,25 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i("onDestroy", "GameActivity removingListeners")
+
         if (this::roomRef.isInitialized) {
             roomRef.removeEventListener(roomListener)
-            Log.i("onDestroy Home", "roomRef isInitialized")
-
         }
         if (this::wordRef.isInitialized) {
             wordRef.removeEventListener(playersListener)
-            Log.i("onDestroy Game", "wordRef isInitialized")
-
         }
         if (this::wordRef.isInitialized) {
             wordRef.removeEventListener(wordListener)
-            Log.i("onDestroy Game", "wordRef isInitialized")
-
         }
         if (this::scoreRef.isInitialized) {
             scoreRef.removeEventListener(scoreListener)
-            Log.i("onDestroy Game", "scoreRef isInitialized")
-
         }
         if (this::stateRef.isInitialized) {
             stateRef.removeEventListener(stateListener)
-            Log.i("onDestroy Game", "stateRef isInitialized")
-
         }
         if (this::picRef.isInitialized) {
             picRef.removeEventListener(profilePicListener)
-            Log.i("onDestroy Game", "picRef isInitialized")
-
         }
         //viewModel.getRound().removeObserver()
 
@@ -532,12 +522,6 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
         item?.let {
             if (playersListObj.values.none { it.state == "winner" }) {
 
-                Log.i(
-                    "$playerName onItemClick winner",
-                    playersListObj.values.filter { it.state == "winner" }.toString()
-                )
-                Log.i(
-                    "$playerName onItemClick winner", item.name + item.state)
                 if (item.state == "in") {
                     stateRef.child(item.name).setValue("out")
                     playersListObj[item.name]!!.state = "out"
