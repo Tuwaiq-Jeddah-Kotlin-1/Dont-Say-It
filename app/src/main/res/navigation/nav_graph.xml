@@ -50,7 +50,9 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
-            app:destination="@id/signupFragment" />
+            app:destination="@id/signupFragment"
+            app:popUpTo="@+id/homeFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment"
@@ -64,7 +66,9 @@
         tools:layout="@layout/fragment_signup" >
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/homeFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_signupFragment_to_homeFragment"
             app:destination="@id/homeFragment"

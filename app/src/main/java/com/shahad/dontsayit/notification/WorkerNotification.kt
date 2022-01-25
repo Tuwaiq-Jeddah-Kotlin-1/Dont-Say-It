@@ -7,17 +7,16 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.shahad.dontsayit.CHANNEL_ID
 import com.shahad.dontsayit.NOTIFICATION_NAME
+import com.shahad.dontsayit.R
 
 class WorkerNotification(private val context: Context, workParams: WorkerParameters) :
     Worker(context, workParams) {
     override fun doWork(): Result {
         val notification =
             NotificationCompat.Builder(context, CHANNEL_ID).setTicker(NOTIFICATION_NAME)
-
-                // .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                // .setLargeIcon()
-                .setContentTitle("Shhhh")
-                .setContentText("come play..")
+               .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Don't say it")
+                .setContentText("shhhh...come play..")
                 .setAutoCancel(true)//when we click it, it gets dismissed
                 .build()
         //create notification manager

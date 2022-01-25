@@ -112,7 +112,7 @@ class SignupFragment : Fragment() {
         }
         binding.btnSignup.setOnClickListener {
             lifecycleScope.launch {
-                binding.btnLogin.startAnimation(scaleDown)
+                binding.btnSignup.startAnimation(scaleDown)
                 delay(100)
                 if (checkConnection(
                         requireContext(),
@@ -148,7 +148,12 @@ class SignupFragment : Fragment() {
     }
 
     private fun displayBottomsheet() {
-        if (this::pictureList.isInitialized) {
+
+
+        if (checkConnection(
+                requireContext(),
+                viewModel.checkConnection(requireContext())
+            )&&this::pictureList.isInitialized) {
             val action =
                 SignupFragmentDirections.actionSignupFragmentToBottomSheetProfilePictures(
                     pictureList,

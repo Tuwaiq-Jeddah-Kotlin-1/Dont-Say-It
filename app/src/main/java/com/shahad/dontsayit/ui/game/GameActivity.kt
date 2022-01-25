@@ -107,11 +107,11 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
                     addRoomEventListener()
                 }
             }
-            binding.close.setOnClickListener {
-                onBackPressed()
-            }
-        }
 
+        }
+        binding.close.setOnClickListener {
+            onBackPressed()
+        }
         roundNumberObserver()
         addRoomEventListener()
         addPlayersListener()
@@ -201,7 +201,7 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
 
 
     override fun onBackPressed() {
-        super.onBackPressed()
+
         Log.d("onBack", "Fragment back pressed invoked")
 
         if (playerName == hostName) {
@@ -209,7 +209,7 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
         } else {
             playerLeft()
         }
-        removeListeners()//added this hasn't been tested yet!!!
+        super.onBackPressed()
     }
 
     private fun deleteRoom() {
@@ -298,16 +298,17 @@ class GameActivity : AppCompatActivity(), GameAdapter.ItemListener {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                playersListObj.keys.indexOf(snapshot.key.toString())////new removed added has not been tested!!
+                Log.i("$playerName playersListObj onChildRemoved ${snapshot.key}", playersListObj.toString())
 
                 binding.recyclerview.adapter!!.notifyItemRemoved(
                     playersListObj.minus(playerName).keys.indexOf(
                         snapshot.key.toString()
                     )
                 )
+                playersListObj.keys.remove(snapshot.key)
+
                 if (snapshot.key == playerName) {//player left
                     finish()
-
                 }
 
             }

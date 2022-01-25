@@ -77,9 +77,9 @@ class Repo(val context: Context) {
                 if (task.isSuccessful) {
                     Log.d(tAG, "signInWithEmail:success")
                     savePersist(
-                        auth.currentUser!!.displayName!!,
+                        auth.currentUser!!.displayName ?:"",
                         email,
-                        auth.currentUser!!.photoUrl!!.toString(),
+                        auth.currentUser!!.photoUrl?.toString() ?: "",
                         auth.uid!!,
                         context
                     )

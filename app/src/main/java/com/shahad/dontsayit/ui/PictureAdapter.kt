@@ -26,8 +26,7 @@ class PictureAdapter(
         holder.imgPicture.load(picture.picture)
 
         holder.onBind(picture.picture)
-
-    }
+}
 
     override fun getItemCount(): Int {
         return profilePictureList.size
@@ -37,18 +36,18 @@ class PictureAdapter(
         fun onItemClick(item: String?)
     }
 
-    inner class ItemAdapter(binding: RecyclerviewProfilepictureItemBinding) :
-        RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener {
+    inner class ItemAdapter(val binding: RecyclerviewProfilepictureItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         val imgPicture = binding.imgPic
         var item: String? = null
 
         init {
             itemView.setOnClickListener(this)
+
         }
 
         fun onBind(pic: String) {
             item = pic
+
         }
 
         override fun onClick(v: View) {

@@ -1,7 +1,5 @@
 package com.shahad.dontsayit.util
 
-import android.content.res.Resources
-import com.shahad.dontsayit.R
 import java.util.regex.Pattern
 
 
@@ -10,7 +8,7 @@ private val hasLowercase = Pattern.compile("[a-z]")
 private val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
 fun checkIfEmpty(str: String): String? {
     return if (str.isEmpty()) {
-        Resources.getSystem().getString(R.string.required)
+        "Required"
     } else {
         null
     }
@@ -18,9 +16,9 @@ fun checkIfEmpty(str: String): String? {
 
 fun validateMail(email: String): String? {
     return if (email.isEmpty()) {
-        Resources.getSystem().getString(R.string.required)
+        "Required"
     } else if (!emailPattern.matcher(email).matches()) {
-        Resources.getSystem().getString(R.string.Invalid)
+        "Invalid"
     } else {
         null
     }
@@ -28,13 +26,13 @@ fun validateMail(email: String): String? {
 
 fun validatePasswords(password: String): String? {
     return if (password.isEmpty()) {
-        Resources.getSystem().getString(R.string.required)
+        "Required"
     } else if (password.length < 6) {
-        Resources.getSystem().getString(R.string.tooshort)
+        "Too short, Needs at least 6 characters"
     } else if (!hasUppercase.matcher(password).find()) {
-        Resources.getSystem().getString(R.string.oneupper)
+        "Need at least one upper case letter"
     } else if (!hasLowercase.matcher(password).find()) {
-        Resources.getSystem().getString(R.string.onelower)
+        "Need at least one lower case letter"
     } else {
         null
     }
@@ -43,13 +41,13 @@ fun validatePasswords(password: String): String? {
 fun validateUsername(userName: String): String? {
     return when {
         userName.isEmpty() -> {
-            Resources.getSystem().getString(R.string.required)
+            "Required"
         }
         userName.length > 10 -> {
-            Resources.getSystem().getString(R.string.toolong)
+            "Too long. Max 10 characters"
         }
         userName.length < 6 -> {
-            Resources.getSystem().getString(R.string.tooshort)
+            "Too short, Needs at least 6 characters"
         }
         else -> {
             null
