@@ -12,6 +12,7 @@ fun checkIfEmpty(str: String): String? {
     } else {
         null
     }
+    
 }
 
 fun validateMail(email: String): String? {

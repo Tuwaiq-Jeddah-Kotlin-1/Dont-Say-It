@@ -7,8 +7,11 @@ import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.shahad.dontsayit.*
 import java.util.*
+import kotlin.coroutines.Continuation
 
 fun checkConnection(context: Context, boolean: Boolean): Boolean {
     return if (boolean) {
